@@ -1,6 +1,12 @@
 fountain-js
 ===========
 
+This is a fork of fountain-js. The goal of this fork is to integrate statistics features to help bring a screenplay into production.
+
+Currently, there is a locations report feature that lists out all locations in the screenplay and orders them by scene count and groups them by interior vs. exterior.
+
+Future additions might include a characters report and dialogue vs. action breakdown.
+
 fountain-js is a JavaScript based parser for the screenplay format [Fountain](http://fountain.io/).
 
 You can [try fountain-js out](http://mattdaly.github.com/Fountain.js/). The file system currently uses the HTML 5 File API, which means not all browsers support it, you'll be told if yours doesn't - I'm working on compatiblity. CSS styling isn't complete, so some elements aren't placed correctly and the text spacing might not be quite right, and, as you'll see, individual pages aren't currently supported either.
