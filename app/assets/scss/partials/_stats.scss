@@ -1,43 +1,70 @@
-html, body {
-	font-family:'Courier Prime', 'Courier';
-	background: #ccc;
-	margin:0;
-	padding: 2rem;
-}
 .italic {
 	font-style:italic;
 }
 .bold {
 	font-weight: bold;
 }
-#locations, #script {
-	background:#fff;
+
+#locations {
 	padding:2rem;
+	margin:auto;
+	width:75%;
 	margin-bottom:2rem;
-}
-#script {
-	display: none;
-}
-#locations table {
-	border: 1px solid #ddd;
-}
-#locations td, #locations th {
-	padding:1rem;
-	margin:0;
-}
-#locations td {
-	border-bottom: 1px solid #ddd;
-	border-collapse: collapse;
-}
-#locations th {
-	background: #444;
-	color:#fff;
-	border:0;
-}
-#locations tr {
-	padding:0;
-	margin:0;
-}
-.fountain-script {
-	display:none;
+
+	table {
+		background:#fff;
+		border: 1px solid #ddd;
+		width:100%;
+		margin:auto;
+	}
+	tr {
+		padding:0;
+		margin:0;
+
+		$exterior: #fffbee;
+
+		&.exterior {
+			background-color: $exterior;
+
+			&:nth-child(odd) {
+				background-color: darken($exterior, 5%);
+			}
+		}
+
+		$interior: #eefeff;
+
+		&.interior {
+			background-color: #eefeff;
+
+			&:nth-child(odd) {
+				background-color: darken($interior, 5%);
+			}
+		}
+
+		$unknown: #ccc;
+
+		&.unknown {
+			background-color: #ccc;
+
+			&:nth-child(odd) {
+				background-color: darken($unknown, 5%);
+			}
+		}
+
+	
+	}
+	td, th {
+		padding:1rem;
+		margin:0;
+		text-align: left;
+	}
+	td {
+		border-bottom: 1px solid #ddd;
+		border-collapse: collapse;
+	}
+	th {
+		background: #444;
+		color:#fff;
+		border:0;
+	}
 }
