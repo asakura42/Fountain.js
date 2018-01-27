@@ -1,7 +1,9 @@
 /* .page > p {
     font-style: italic;
 }*/
-
+.title-page, .toc-page, .script-page{
+	display:none;
+}
 body {
 	background-color: #333333;
 }

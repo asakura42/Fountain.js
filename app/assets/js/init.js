@@ -67,7 +67,8 @@ fetch(filename)
            <label for="unit">Unit: </label>
            <select id="unit">
               <option value="lines">Lines</option>
-              <option value="words" selected>Words</option>
+              <option value="words">Words</option>
+              <option value="time" selected>Time</option>
            </select>
            </div>
         </div>
@@ -117,8 +118,15 @@ var SumDialogs = function( dialogs ) {
   dialogs.forEach(function(line) {
     if( unit === "lines" ) {
       charactersStats[line.character] = charactersStats[line.character] === undefined ? 1 : charactersStats[line.character] + 1
+    } else if( unit === "time" ) {
+      charactersStats[line.character] = charactersStats[line.character] === undefined ? line.time : charactersStats[line.character] + line.time
     } else {
       charactersStats[line.character] = charactersStats[line.character] === undefined ? line.wordCount : charactersStats[line.character] + line.wordCount
+    }
+    if( unit === "time" ) {
+      for (var key in charactersStats) {
+        charactersStats[key] = Math.round(charactersStats[key])
+      }
     }
     if ( charactersColor[line.character] === undefined ) { charactersColor[line.character] = line.color }
   })
@@ -145,14 +153,17 @@ var AnalyseDialogs = function() {
 
   $('.dialogue').each(function(){
     let character = $(this).children('h4').text().replace(' (SUITE)', '' )
-    let wordCount = $(this).children('p').text().trim().replace('/\s+/gi', ' ').split(' ').length;
-    dialogs.push( {'character': character, 'wordCount': wordCount, 'sequence': $(this).data('seqindex'), 'color': $(this).children('h4').css("color"), 'text':  $(this).children('p').text().trim() } )
+    let raw_text = $(this).children('p').text().trim().replace('/\s+/gi', ' ')
+    let wordCount = raw_text.split(' ').length;
+    dialogs.push( {'character': character, 'wordCount': wordCount, 'sequence': $(this).data('seqindex'), 'color': $(this).children('h4').css("color"), 'text':  raw_text, 'time':  raw_text.length * 60 * 1000 / 1000 /* 100 chracter for one minutes. needs milliseconds */} )
   })
 
   return dialogs
 }
 
 var DrawChart = function( series ) {
+  var unit = $('#unit').val()
+  var type = unit === 'time' ? 'datetime' : 'linear'
   var chart = Highcharts.chart('stats', {
       chart: {
           type: 'bar'
@@ -164,9 +175,20 @@ var DrawChart = function( series ) {
           categories: Object.keys(series.colors),
           title: {
               text: false
-          }
+          },
       },
       yAxis: {
+          type: type,
+          dateTimeLabelFormats: {
+            millisecond: '%%M:%S',
+            second: '%M:%S',
+            minute: '%M:%S',
+            hour: '%M:%S',
+            day: '%M:%S',
+            week: '%M:%S',
+            month: '%M:%S',
+            year: '%M:%S'
+          },
           min: 0,
           title: {
               text: false,
@@ -186,6 +208,15 @@ var DrawChart = function( series ) {
               },
               colorByPoint : true,
               colors: Object.values(series.colors)
+          },
+          series: {
+            dataLabels: {
+              formatter: function() {
+                console.log(this)
+                let val = unit === 'time' ? msToHMS(this.y) : this.y
+                return val
+              }
+            }
           }
       },
       credits: {
@@ -196,7 +227,7 @@ var DrawChart = function( series ) {
       },
       series: [{data:Object.values(series.stats)}]
   });
-  return chart;
+  return chart
 }
 
 var DrawChartSequence = function( dialogs ) {
@@ -211,14 +242,28 @@ var DrawChartSequence = function( dialogs ) {
       characters[line.character] = { 'idx': i, 'color': line.color}
       i = i + 1
     }
-	  let x2 = unit === 'lines' ? x + 1 : x + line.wordCount
+	  let x2 = unit === 'lines' ? x + 1 : unit === 'time' ? x + line.time : x + line.wordCount
 	  data.push({'x': x, 'x2': x2, 'y': characters[line.character].idx, 'text': line.text})
 	  x = x2
   })
+  var type = unit === 'time' ? 'datetime' : 'linear'
   var chart = Highcharts.chart('stats-sequences', {
     chart: {
         type: 'xrange',
         zoomType: 'xy'
+    },
+    xAxis: {
+      type: type,
+      dateTimeLabelFormats: {
+        millisecond: '%%M:%S',
+        second: '%M:%S',
+        minute: '%M:%S',
+        hour: '%M:%S',
+        day: '%M:%S',
+        week: '%M:%S',
+        month: '%M:%S',
+        year: '%M:%S'
+      }
     },
     title: {
         text: 'Dialogs X-Range'
@@ -251,8 +296,26 @@ var DrawChartSequence = function( dialogs ) {
     },
     tooltip: {
       formatter: function() {
-        return '<strong>' + this.yCategory + '</strong> - ' + this.point.index + '<br/>' + '<p>' + data[this.point.index].text + '</p>'
+        let val = unit === 'time' ? msToHMS(this.x2 - this.x) : this.x2 - this.x
+        return '<strong>' + this.yCategory + '</strong> - ' + this.point.index + '<br>' + val + '<br>' + '<p>' + data[this.point.index].text + '</p>'
       }
     }
   })
+}
+
+function msToHMS( ms ) {
+    // 1- Convert to seconds:
+    var seconds = ms / 1000;
+    // 2- Extract hours:
+    //var hours = parseInt( seconds / 3600 ); // 3,600 seconds in 1 hour
+    seconds = seconds % 3600; // seconds remaining after extracting hours
+    // 3- Extract minutes:
+    var minutes = parseInt( seconds / 60 ); // 60 seconds in 1 minute
+    // 4- Keep only seconds not extracted to minutes:
+    seconds = Math.round(seconds % 60)
+
+    minutes = ("0" + minutes).slice(-2)
+    seconds = ("0" + seconds).slice(-2);
+
+    return minutes + ':' + seconds
 }
