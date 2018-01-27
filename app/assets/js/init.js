@@ -4,10 +4,10 @@ let filename = url.substring(url.lastIndexOf('/') + 1)
 // Get Foutain Name
 filename = filename.replace('html', 'fountain')
 
-var page = function (html, isTitlePage) {
+var page = function (html, className) {
   var $output = $(document.createElement('div')).addClass('page').html(html)
-  if (isTitlePage) {
-    $output.addClass('title-page')
+  if (className) {
+    $output.addClass(className)
   } else {
     $output.children('div.dialogue.dual').each(function () {
       dual = $(this).prev('div.dialogue')
@@ -34,17 +34,17 @@ fetch(filename)
     fountain.parse(text, true, function (result) {
     if (result) {
       if (result.title && result.html.title_page) {
-        $script.append(page(result.html.title_page, true))
+        $script.append(page(result.html.title_page, 'title-page'))
         $title.html(result.title || 'Untitled')
       }
       // toc
-      $script.append(page('<h2>Table des Matières</h2><ol id="toc"></ol>'))
+      $script.append(page('<h2>Table des Matières</h2><h3>Sequences</h3><ol id="toc"></ol><h3>Stats</h3><ol id="toc-stats"><li><a href="#stats">Characters</a><li><a href="#stats-sequences">X-Range</a></li></ol>', 'toc-page'))
 
       // script
-      $script.append(page(result.html.script))
+      $script.append(page(result.html.script, 'script-page'))
 
       // Table of Content
-      let sequencesTitles = $('.page h3')
+      let sequencesTitles = $('.script-page h3')
       let tocHTML = ''
       sequencesTitles.each(function (i) {
         this.id = 'sequence-' + ( i + 1 )
@@ -56,18 +56,23 @@ fetch(filename)
 
       $script.append(page(`
         <h2>Statistiques</h2>
-        <div id="stats-filer">
+        <div id="stats-filter">
+          <div class="filter-field filter-sequences">
            <label for="filter">Sequence: </label>
            <select id="filter">
               <option value="0" selected>All</option>
            </select>
+          </div>
+          <div class="filter-field filter-unit">
            <label for="unit">Unit: </label>
            <select id="unit">
-              <option value="lines" selected>Lines</option>
-              <option value="words">Words</option>
+              <option value="lines">Lines</option>
+              <option value="words" selected>Words</option>
            </select>
+           </div>
         </div>
-        <div id="stats"></div>`)
+        <div id="stats"></div>
+        <div id="stats-sequences"></div>`)
       )
 
       var filterElm = $('#filter')
@@ -86,11 +91,16 @@ fetch(filename)
         this.dataset.seqindex = h3.data('index')
       })
 
-      var chart = DrawChart(AnalyseDialogs())
+      var dialogs = AnalyseDialogs()
+
+      var chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
 
       $('#filter, #unit').change(function(){
-        chart = DrawChart(AnalyseDialogs())
+        chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
+        chartSeq = DrawChartSequence(FilterDialogs(dialogs))
       })
+
+      var chartSeq = DrawChartSequence(dialogs)
 
       $workspace.fadeIn()
       document.title = result.title
@@ -98,42 +108,48 @@ fetch(filename)
   })
 )
 
-var AnalyseDialogs = function() {
+var SumDialogs = function( dialogs ) {
   var charactersStats = []
   var charactersColor = []
 
-  var scriptDialogLines = [] // X-range
-
-  var idx = $('#filter').val()
   var unit = $('#unit').val()
-  if ( idx === '0' ) {
-    $('.dialogue').each(function(){
-      let character = $(this).children('h4').text().replace(' (SUITE)', '' )
-      if( unit === "lines" ) {
-        charactersStats[character] = charactersStats[character] === undefined ? 1 : charactersStats[character] + 1
-      } else {
-        let wordCount = $(this).children('p').text().trim().replace('/\s+/gi', ' ').split(' ').length;
-        charactersStats[character] = charactersStats[character] === undefined ? wordCount : charactersStats[character] + wordCount
-      }
-      charactersColor[character] = $(this).children('h4').css("color")
-      let wordCount = $(this).children('p').text().trim().replace('/\s+/gi', ' ').split(' ').length; // Redudant
-      scriptDialogLines.push( {'character': character, 'wordCount': wordCount, 'sequence': this.dataset.seqindex} )
-    })
-  } else {
-    $( '.dialogue[data-seqindex="' + idx + '"]').each(function(){
-      let character = $(this).children('h4').text().replace(' (SUITE)', '' )
-      if( unit === "lines" ) {
-        charactersStats[character] = charactersStats[character] === undefined ? 1 : charactersStats[character] + 1
-      } else {
-        let wordCount = $(this).children('p').text().trim().replace('/\s+/gi', ' ').split(' ').length;
-        charactersStats[character] = charactersStats[character] === undefined ? wordCount : charactersStats[character] + wordCount
-      }
-      charactersColor[character] = $(this).children('h4').css("color")
-    })
-  }
+  //
+  dialogs.forEach(function(line) {
+    if( unit === "lines" ) {
+      charactersStats[line.character] = charactersStats[line.character] === undefined ? 1 : charactersStats[line.character] + 1
+    } else {
+      charactersStats[line.character] = charactersStats[line.character] === undefined ? line.wordCount : charactersStats[line.character] + line.wordCount
+    }
+    if ( charactersColor[line.character] === undefined ) { charactersColor[line.character] = line.color }
+  })
+
   stats = {'stats': charactersStats, 'colors': charactersColor}
-  console.log(scriptDialogLines)
   return stats
+}
+
+var FilterDialogs = function(dialogs) {
+  var filtered = []
+  var idx = parseInt( $('#filter').val() )
+
+  var filtered = []
+  dialogs.forEach(function(line) {
+    if ( idx === 0 || idx === line.sequence) {
+      filtered.push(line)
+    }
+  })
+  return filtered
+}
+
+var AnalyseDialogs = function() {
+  var dialogs = []
+
+  $('.dialogue').each(function(){
+    let character = $(this).children('h4').text().replace(' (SUITE)', '' )
+    let wordCount = $(this).children('p').text().trim().replace('/\s+/gi', ' ').split(' ').length;
+    dialogs.push( {'character': character, 'wordCount': wordCount, 'sequence': $(this).data('seqindex'), 'color': $(this).children('h4').css("color"), 'text':  $(this).children('p').text().trim() } )
+  })
+
+  return dialogs
 }
 
 var DrawChart = function( series ) {
@@ -183,37 +199,60 @@ var DrawChart = function( series ) {
   return chart;
 }
 
-
-/*
-var DrawChartSequence = function( series ) {
+var DrawChartSequence = function( dialogs ) {
+  var data = []
+  var characters = []
+  var previous = 0
+  var i = 0
+  var x = 0
+  var unit = $('#unit').val()
+  dialogs.forEach(function(line) {
+	  if ( characters[line.character] === undefined ) {
+      characters[line.character] = { 'idx': i, 'color': line.color}
+      i = i + 1
+    }
+	  let x2 = unit === 'lines' ? x + 1 : x + line.wordCount
+	  data.push({'x': x, 'x2': x2, 'y': characters[line.character].idx, 'text': line.text})
+	  x = x2
+  })
   var chart = Highcharts.chart('stats-sequences', {
     chart: {
-        type: 'xrange'
+        type: 'xrange',
+        zoomType: 'xy'
     },
     title: {
-        text: 'Highcharts X-range'
+        text: 'Dialogs X-Range'
     },
+    colors: Object.values(characters).map( a => a.color),
     yAxis: {
         title: {
             text: ''
         },
+        categories: Object.keys(characters),
+        reversed: true,
+    },
+    plotOptions: {
+      xrange: {
+        pointPadding: 0,
+        groupPadding: 0,
+        borderRadius: 0,
+        borderWidth: 0,
+        cursor: 'pointer'
+      }
     },
     series: [{
-        borderColor: 'gray',
-        pointWidth: 80,
-        data: [{
-            x: 0,
-            x2: 150,
-            y: 0
-        }, {
-            x: 150,
-            x2: 200,
-            y: 1
-        }],
-        dataLabels: {
-            enabled: true
-        }
-    }]
-  });
+        data: data,
+    }],
+    credits: {
+        enabled: false
+    },
+    legend: {
+      enabled: false
+    },
+    tooltip: {
+      formatter: function() {
+        return '<strong>' + this.yCategory + '</strong> - ' + this.point.index + '<br/>' + '<p>' + data[this.point.index].text + '</p>'
+      }
+    }
+  })
 }
-*/

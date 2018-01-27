@@ -47,22 +47,41 @@ body p{
 	text-decoration: underline;
 }
 
-#workspace #script .page h3::before {
+#workspace #script .script-page h3::before {
     color: #000000;
     content: attr(data-index) ".";
 }
 
-#workspace #script .page h3::after {
+#workspace #script .script-page h3::after {
     color: inherit;
     content: attr(data-index) ".";
 	display: none;
 }
 
-#toc {
+.toc-page ol {
 	font-size: 17px;
 	font-weight: bold;
 }
 
+#workspace #script .toc-page h3 {
+	color: black;
+}
+
 #toc a {
     color: #008000;
+}
+
+#toc-stats a {
+    color: #000080;
+}
+
+#stats-filter {
+	display:flex;
+	justify-content: space-between;
+}
+
+#stats-filter {
+	font-family: "Lucida Sans Unicode", "sans-serif";
+	margin-bottom: 2em;
+	font-size: 14px;
 }
