@@ -76,7 +76,7 @@ fetch(filename)
       )
 
       var filterElm = $('#filter')
-      $('h3').each(function(){
+      $('.script-page h3').each(function(){
         filterElm.append('<option value=' + $(this).data('index') +'>' + $(this).data('index') + '. ' + $(this).text() + '</option>')
       })
 
