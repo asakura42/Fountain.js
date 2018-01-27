@@ -1,0 +1,9 @@
+body {
+	background-color: #000000;
+}
+
+#workspace #script .page {
+	background: #333;
+	border: #666666;
+	color: white;
+}

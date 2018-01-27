@@ -1,0 +1,68 @@
+/* .page > p {
+    font-style: italic;
+}*/
+
+body {
+	background-color: #333333;
+}
+
+body p{
+	line-height: 20px!important;
+}
+
+.toolbar {
+	display: none;
+}
+
+#workspace #script.dpi100 .page {
+    padding: 100px 100px 100px 100px;
+}
+
+@media (max-width: 850px) {
+	#workspace #script {
+		width: auto!important;
+	}
+	#workspace #script.dpi100 .page {
+		padding: 100px 10% 100px 10%;
+	}
+}
+
+@media (max-width: 600px) {
+	#workspace #script .page div.dialogue {
+		width: 100%;
+	}
+}
+
+#workspace #script .title-page h1 {
+	margin-top: 300px;
+}
+
+#workspace #script .page div.dialogue h4 {
+	font-weight: bold;
+}
+
+#workspace #script .page h3 {
+	font-weight: bold!important;
+	color: #008000;
+	text-decoration: underline;
+}
+
+#workspace #script .page h3::before {
+    color: #000000;
+    content: attr(data-index) ".";
+}
+
+#workspace #script .page h3::after {
+    color: inherit;
+    content: attr(data-index) ".";
+	display: none;
+}
+
+#toc {
+	font-size: 17px;
+	font-weight: bold;
+}
+
+#toc a {
+    color: #008000;
+}
