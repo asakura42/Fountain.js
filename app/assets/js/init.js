@@ -18,6 +18,9 @@ var page = function (html, className) {
   return $output
 }
 
+var counter = 0
+var prev_text = ''
+
 // workspace
 var $dock       = $(document.getElementById('dock'))
   , $workspace  = $(document.getElementById('workspace'))
@@ -28,86 +31,104 @@ var $dock       = $(document.getElementById('dock'))
   , $script     = $(document.getElementById('script')).addClass('us-letter').addClass('dpi' + '100')
   , $backdrop   = $(document.createElement('div')).addClass('backdrop')
 
-fetch(filename)
-.then(response => response.text())
-.then(text =>
-    fountain.parse(text, true, function (result) {
-    if (result) {
-      if (result.title && result.html.title_page) {
-        $script.append(page(result.html.title_page, 'title-page'))
-        $title.html(result.title || 'Untitled')
+$(document).ready(function(){
+  ParserAndPrint()
+  setInterval(ParserAndPrint, 5000)
+})
+
+var ParserAndPrint = function () {
+  counter++
+  fetch(filename)
+  .then(response => response.text())
+  .then(text =>
+      fountain.parse(text, true, function (result) {
+      if (result && text !== prev_text) {
+        prev_text = text
+        if (result.title && result.html.title_page) {
+          if ( ! $('.title-page').length )
+          	$script.append(page(result.html.title_page, 'title-page'))
+          $title.html(result.title || 'Untitled')
+        }
+        // toc
+        if ( ! $('.toc-page').length )
+          $script.append(page('<h2>Table des Matières</h2><h3>Sequences</h3><ol id="toc"></ol><h3>Stats</h3><ol id="toc-stats"><li><a href="#stats">Characters</a><li><a href="#stats-sequences">X-Range</a></li></ol>', 'toc-page'))
+
+        // script
+        if ( ! $('.script-page').length ) {
+          $script.append(page(result.html.script, 'script-page'))
+        } else {
+          $('.script-page').html(result.html.script)
+        }
+
+        // Table of Content
+        let sequencesTitles = $('.script-page h3')
+        let tocHTML = ''
+        sequencesTitles.each(function (i) {
+          this.id = 'sequence-' + ( i + 1 )
+          this.dataset.index = i + 1
+          tocHTML = tocHTML + '<li><a href="#sequence-' + ( i + 1 ) + '">' + this.innerText + '</a></li>'
+        })
+        $('#toc').html( tocHTML )
+        $('html').smoothScroll() // Activate smooth scrool on all internal links
+
+        if ( ! $('.stats-page').length )
+          $script.append(page(`
+            <h2>Statistiques</h2>
+            <div id="stats-filter">
+              <div class="filter-field filter-sequences">
+               <label for="filter">Sequence: </label>
+               <select id="filter">
+                  <option value="0" selected>All</option>
+               </select>
+              </div>
+              <div class="filter-field filter-unit">
+               <label for="unit">Unit: </label>
+               <select id="unit">
+                  <option value="lines">Lines</option>
+                  <option value="words">Words</option>
+                  <option value="time" selected>Time</option>
+               </select>
+               </div>
+            </div>
+            <div id="stats"></div>
+            <div id="stats-sequences"></div>`, 'stats-page')
+          )
+
+        var filterElm = $('#filter')
+        $('.script-page h3').each(function(){
+          filterElm.append('<option value=' + $(this).data('index') +'>' + $(this).data('index') + '. ' + $(this).text() + '</option>')
+        })
+
+        $('.dialogue').each(function(){
+          let character = $(this).children('h4').text().replace(' (SUITE)', '' )
+          $(this).addClass(character.toLowerCase()) // Add character name as class of character dialog titles
+          $(this).html(($(this).html()).replace(/(\w)( )([!\?:;%»]|&raquo;)/, '$1&nbsp;$3')) // Add non-breaking space for French
+        })
+
+        $('.dialogue').each(function(){
+          var h3 = $(this).prevAll( 'h3:first' )
+          this.dataset.seqindex = h3.data('index')
+        })
+
+        var dialogs = AnalyseDialogs()
+
+        var chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
+
+        $('#filter, #unit').change(function(){
+          chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
+          chartSeq = DrawChartSequence(FilterDialogs(dialogs))
+        })
+
+        var chartSeq = DrawChartSequence(dialogs)
+
+        document.title = result.title
+
+        if ( counter === 1 )
+          $workspace.fadeIn()
       }
-      // toc
-      $script.append(page('<h2>Table des Matières</h2><h3>Sequences</h3><ol id="toc"></ol><h3>Stats</h3><ol id="toc-stats"><li><a href="#stats">Characters</a><li><a href="#stats-sequences">X-Range</a></li></ol>', 'toc-page'))
-
-      // script
-      $script.append(page(result.html.script, 'script-page'))
-
-      // Table of Content
-      let sequencesTitles = $('.script-page h3')
-      let tocHTML = ''
-      sequencesTitles.each(function (i) {
-        this.id = 'sequence-' + ( i + 1 )
-        this.dataset.index = i + 1
-        tocHTML = tocHTML + '<li><a href="#sequence-' + ( i + 1 ) + '">' + this.innerText + '</a></li>'
-      })
-      $('#toc').html( tocHTML )
-      $('html').smoothScroll() // Activate smooth scrool on all internal links
-
-      $script.append(page(`
-        <h2>Statistiques</h2>
-        <div id="stats-filter">
-          <div class="filter-field filter-sequences">
-           <label for="filter">Sequence: </label>
-           <select id="filter">
-              <option value="0" selected>All</option>
-           </select>
-          </div>
-          <div class="filter-field filter-unit">
-           <label for="unit">Unit: </label>
-           <select id="unit">
-              <option value="lines">Lines</option>
-              <option value="words">Words</option>
-              <option value="time" selected>Time</option>
-           </select>
-           </div>
-        </div>
-        <div id="stats"></div>
-        <div id="stats-sequences"></div>`)
-      )
-
-      var filterElm = $('#filter')
-      $('.script-page h3').each(function(){
-        filterElm.append('<option value=' + $(this).data('index') +'>' + $(this).data('index') + '. ' + $(this).text() + '</option>')
-      })
-
-      $('.dialogue').each(function(){
-        let character = $(this).children('h4').text().replace(' (SUITE)', '' )
-        $(this).addClass(character.toLowerCase()) // Add character name as class of character dialog titles
-        $(this).html(($(this).html()).replace(/(\w)( )([!\?:;%»]|&raquo;)/, '$1&nbsp;$3')) // Add non-breaking space for French
-      })
-
-      $('.dialogue').each(function(){
-        var h3 = $(this).prevAll( 'h3:first' )
-        this.dataset.seqindex = h3.data('index')
-      })
-
-      var dialogs = AnalyseDialogs()
-
-      var chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
-
-      $('#filter, #unit').change(function(){
-        chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
-        chartSeq = DrawChartSequence(FilterDialogs(dialogs))
-      })
-
-      var chartSeq = DrawChartSequence(dialogs)
-
-      $workspace.fadeIn()
-      document.title = result.title
-    }
-  })
-)
+    })
+  )
+}
 
 var SumDialogs = function( dialogs ) {
   var charactersStats = []
@@ -212,10 +233,12 @@ var DrawChart = function( series ) {
           series: {
             dataLabels: {
               formatter: function() {
-                console.log(this)
                 let val = unit === 'time' ? msToHMS(this.y) : this.y
                 return val
               }
+            },
+            animation: {
+              duration: false
             }
           }
       },
@@ -226,7 +249,7 @@ var DrawChart = function( series ) {
         enabled: false
       },
       series: [{data:Object.values(series.stats)}]
-  });
+  })
   return chart
 }
 
@@ -250,7 +273,9 @@ var DrawChartSequence = function( dialogs ) {
   var chart = Highcharts.chart('stats-sequences', {
     chart: {
         type: 'xrange',
-        zoomType: 'xy'
+        zoomType: 'xy',
+        panning: true,
+        panKey: 'shift'
     },
     xAxis: {
       type: type,
@@ -283,7 +308,12 @@ var DrawChartSequence = function( dialogs ) {
         borderRadius: 0,
         borderWidth: 0,
         cursor: 'pointer'
-      }
+      },
+      series: {
+        animation: {
+          duration: false
+        }
+      },
     },
     series: [{
         data: data,
