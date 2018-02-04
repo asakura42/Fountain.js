@@ -49,6 +49,9 @@ var ParserAndPrint = function () {
           	$script.append(page(result.html.title_page, 'title-page'))
           $title.html(result.title || 'Untitled')
         }
+
+        document.title = result.title
+
         // toc
         if ( ! $('.toc-page').length )
           $script.append(page('<h2>Table des Matières</h2><h3>Sequences</h3><ol id="toc"></ol><h3>Stats</h3><ol id="toc-stats"><li><a href="#stats">Characters</a><li><a href="#stats-sequences">X-Range</a></li></ol>', 'toc-page'))
@@ -90,8 +93,9 @@ var ParserAndPrint = function () {
                </select>
                </div>
             </div>
-            <div id="stats"></div>
-            <div id="stats-sequences"></div>`, 'stats-page')
+            <div id="stats-characters" class="charts"></div>
+            <div id="stats-sequences" class="charts"></div>
+            <div id="stats-categories" class="charts"></div>`, 'stats-page')
           )
 
         var filterElm = $('#filter')
@@ -113,15 +117,15 @@ var ParserAndPrint = function () {
         var dialogs = AnalyseDialogs()
 
         var chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
+        var chartSeq = DrawChartSequence(dialogs)
+
+        DrawCategoriesChart(dialogs)
 
         $('#filter, #unit').change(function(){
           chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
           chartSeq = DrawChartSequence(FilterDialogs(dialogs))
+          DrawCategoriesChart(dialogs)
         })
-
-        var chartSeq = DrawChartSequence(dialogs)
-
-        document.title = result.title
 
         if ( counter === 1 )
           $workspace.fadeIn()
@@ -182,15 +186,60 @@ var AnalyseDialogs = function() {
   return dialogs
 }
 
-var DrawChart = function( series ) {
+function DrawCategoriesChart(dialogs) {
+  fetch('assets/json/characters.json')
+    .then(response => response.text())
+    .then(function(text) {
+      var characters = JSON.parse(text)
+      // For each categories
+      for( let cat in characters.categories) {
+        var dialog_categories = SumDialogStatsCategories(SumDialogs(FilterDialogs(dialogs)), characters, cat)
+        var id = 'stats-categories_' + cat
+        if($("#" + id).length == 0) {
+          $('#stats-categories').append( '<div id="' + id +'" class="charts"></div>' )
+        }
+        var chart_catergories = DrawChart(dialog_categories, id, cat)
+      }
+    })
+}
+
+function SumDialogStatsCategories( stats_in, characters, cat ) {
+  let stats_out = {stats: [], colors:[]}
+  stats_out.stats["undefined"] = 0
+  stats_out.colors["undefined"] = "black"
+  stats_in.group = []
+  Object.keys(characters.categories[cat]).forEach(function(val){
+    stats_out.stats[val] = 0
+    stats_out.colors[val] = characters.categories[cat][val].color
+    characters.categories[cat][val].series.forEach(function(val2){
+        stats_in.group[val2.toUpperCase()] = val
+    })
+  })
+  for (let k_character in stats_in.stats) {
+    if (stats_out.stats[stats_in.group[k_character]] !== undefined) {
+      stats_out.stats[stats_in.group[k_character]] = stats_out.stats[stats_in.group[k_character]] + stats_in.stats[k_character]
+    } else {
+      stats_out.stats[stats_in.group["undefined"]] = stats_out.stats[stats_in.group["undefined"]] + stats_in.stats[k_character]
+    }
+  }
+  if ( stats_out.stats["undefined"] === 0 ) {
+    delete stats_out.stats["undefined"]
+    delete stats_out.colors["undefined"]
+  }
+  return stats_out
+}
+
+var DrawChart = function( series, id, title ) {
+  if ( id === undefined ) id = 'stats-characters'
+  if ( title === undefined ) title = 'characters'
   var unit = $('#unit').val()
   var type = unit === 'time' ? 'datetime' : 'linear'
-  var chart = Highcharts.chart('stats', {
+  var chart = Highcharts.chart(id, {
       chart: {
           type: 'bar'
       },
       title: {
-          text: 'Dialog Stats per Character'
+          text: 'Dialog Stats per ' + title
       },
       xAxis: {
           categories: Object.keys(series.colors),

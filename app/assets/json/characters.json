@@ -1,0 +1,47 @@
+{
+  "categories": {
+    "gender": {
+      "male": {
+        "color": "Blue",
+        "series": [
+          "zawn",
+          "berde",
+          "krilg",
+          "eurg",
+          "le chancelier"
+        ]
+      },
+      "female": {
+        "color": "DeepPink",
+        "series": [
+          "plaude",
+          "frude"
+        ]
+      }
+    },
+    "team": {
+      "heroes": {
+        "color": "Green",
+        "series": [
+          "zawn",
+          "berde",
+          "krilg",
+          "eurg",
+          "plaude",
+          "frude"
+        ]
+      },
+      "governement": {
+        "color": "Red",
+        "series": [
+          "le chancelier",
+          "ferguson",
+          "agent spécial",
+          "nestor",
+          "kreutzberg",
+          "gaylord"
+        ]
+      }
+    }
+  }
+}
