@@ -177,7 +177,7 @@ var AnalyseDialogs = function() {
   var dialogs = []
 
   $('.dialogue').each(function(){
-    let character = $(this).children('h4').text().replace(' (SUITE)', '' )
+    let character = $(this).children('h4').text().replace(/ *\([^)]*\) */g, "")
     let raw_text = $(this).children('p').text().trim().replace('/\s+/gi', ' ')
     let wordCount = raw_text.split(' ').length;
     dialogs.push( {'character': character, 'wordCount': wordCount, 'sequence': $(this).data('seqindex'), 'color': $(this).children('h4').css("color"), 'text':  raw_text, 'time':  raw_text.length * 60 * 1000 / 1000 /* 100 chracter for one minutes. needs milliseconds */} )
@@ -230,13 +230,15 @@ function SumDialogStatsCategories( stats_in, characters, cat ) {
 }
 
 var DrawChart = function( series, id, title ) {
+  console.log()
   if ( id === undefined ) id = 'stats-characters'
   if ( title === undefined ) title = 'characters'
   var unit = $('#unit').val()
   var type = unit === 'time' ? 'datetime' : 'linear'
   var chart = Highcharts.chart(id, {
       chart: {
-          type: 'bar'
+          type: 'bar',
+          height: 200 + Object.values(series.colors).length * 30
       },
       title: {
           text: 'Dialog Stats per ' + title
@@ -324,7 +326,8 @@ var DrawChartSequence = function( dialogs ) {
         type: 'xrange',
         zoomType: 'xy',
         panning: true,
-        panKey: 'shift'
+        panKey: 'shift',
+        height: Object.keys(characters).length * 30
     },
     xAxis: {
       type: type,
