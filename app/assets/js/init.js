@@ -33,7 +33,7 @@ var $dock       = $(document.getElementById('dock'))
 
 $(document).ready(function(){
   ParserAndPrint()
-  setInterval(ParserAndPrint, 5000)
+  setInterval(ParserAndPrint, 1000)
 })
 
 var ParserAndPrint = function () {
@@ -99,9 +99,13 @@ var ParserAndPrint = function () {
           )
 
         var filterElm = $('#filter')
+        let sequence_init_val = filterElm.val()
+        filterElm.html('<option value="0" selected>All</option>')
         $('.script-page h3').each(function(){
           filterElm.append('<option value=' + $(this).data('index') +'>' + $(this).data('index') + '. ' + $(this).text() + '</option>')
         })
+        filterElm.val(sequence_init_val)
+        if ( filterElm.val() === null ) filterElm.val( 0 )
 
         $('.dialogue').each(function(){
           let character = $(this).children('h4').text().replace(' (SUITE)', '' )
@@ -117,7 +121,7 @@ var ParserAndPrint = function () {
         var dialogs = AnalyseDialogs()
 
         var chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
-        var chartSeq = DrawChartSequence(dialogs)
+        var chartSeq = DrawChartSequence(FilterDialogs(dialogs))
 
         DrawCategoriesChart(dialogs)
 
