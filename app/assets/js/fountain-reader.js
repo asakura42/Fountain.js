@@ -8,11 +8,11 @@
 
   $.fn.fountain = function (args) {
     if (typeof args === 'object' || !args) {
-      return this.each(function () {  
+      return this.each(function () {
         var $app       = $(this)
           , $dock      = $(document.getElementById('dock'))
           , $workspace = $(document.getElementById('workspace'));
-        
+
         var dragOver = function (e) {
             $(this).addClass('over');
             e.stopPropagation();
@@ -27,18 +27,18 @@
 
         var loadScript = function (e) {
           e.preventDefault();
-          e.stopPropagation();            
+          e.stopPropagation();
           e = e.originalEvent;
 
           $(this).removeClass('over');
 
           var file   = e.dataTransfer.files[0]
             , reader = new FileReader();
- 
-          if (file) {  
+
+          if (file) {
             reader.onload = function(evt) {
               $app.trigger('fountain-js:loaded', [evt.target.result]);
-            }  
+            }
 
             reader.readAsText(file);
           }
@@ -49,7 +49,7 @@
         // dock
         $(document.getElementById('file-api')).fadeIn().on('dragleave', dragLeave).on('dragover', dragOver).on('drop', loadScript);
 
-        // workspace                
+        // workspace
         var settings    = $.extend({}, $.fn.fountain.defaults, args)
           , $header     = $workspace.find('header')
           , $container  = $header.find('.container')
@@ -59,10 +59,10 @@
           , $toolbar    = $(document.getElementById('toolbar'))
           , $script     = $(document.getElementById('script')).addClass(settings.paper).addClass('dpi' + settings.dpi)
           , $backdrop   = $(document.createElement('div')).addClass('backdrop');
- 
+
         var page = function (html, isTitlePage) {
           var $output = $(document.createElement('div')).addClass('page').html(html);
-                    
+
           if (isTitlePage) {
             $output.addClass('title-page');
           } else {
@@ -80,7 +80,7 @@
         var notify = function (text) {
           $workspace.find('.notification').remove();
           $(document.createElement('p')).addClass('notification').attr('contenteditable', 'false').text(text).appendTo($workspace).fadeIn(200).delay(2000).fadeOut(1000, function() {
-            removeThis();           
+            removeThis();
           });
         };
 
@@ -114,7 +114,7 @@
           $script.empty();
           $dock.show();
         });
-        
+
         $app.on('fountain-js:loaded', function (e, file) {
           $dock.hide();
           $script.empty();
@@ -136,7 +136,7 @@
                 text,
                 unused          = true;
 
-            //Determine locations   
+            //Determine locations
             $(output.tokens).each(function(){
               //Determine if we are looking at a scene heading
               if($(this)[0].type === 'scene_heading') {
@@ -156,9 +156,9 @@
                 }
 
                 $(scene_headings).each(function(){
-                  
+
                   if( $(this)[0].text === location ) {
-                    
+
                     if(time === 'day') {
                       if( $(this)[0].day_count === undefined ) {
                         $(this)[0].day_count = 1;
@@ -174,7 +174,7 @@
                     } else {
                       if ( $(this)[0].unknown_count === undefined ) {
                         $(this)[0].unknown_count = 1;
-                      } else { 
+                      } else {
                         $(this)[0].unknown_count++;
                       }
                     }
@@ -186,31 +186,31 @@
                 });
 
                 if( unused === true ) {
-                  
+
                   if( time === 'day' ) {
                     scene_headings.push({
                       text: location,
-                      day_count: 1 
+                      day_count: 1
                     });
                   } else if( time === 'night' ) {
                     scene_headings.push({
                       text: location,
-                      night_count: 1 
+                      night_count: 1
                     });
                   } else {
                     scene_headings.push({
                       text: location,
-                      unknown_count: 1 
+                      unknown_count: 1
                     });
                   }
-                  
+
                 }
               }
             });
 
             //Determining total number of scenes
             $(scene_headings).each(function(){
-              
+
               //Set undefined and NaN to 0
               if( $(this)[0].day_count === undefined ) $(this)[0].day_count = 0;
               if( $(this)[0].night_count === undefined ) $(this)[0].night_count = 0;
@@ -235,7 +235,7 @@
             scene_headings.sort(sort_by_count);
 
             $i=1;
-            
+
             //Output exteriors
             $(scene_headings).each(function(){
               if($(this)[0].text.indexOf('EXT.') > -1) {
@@ -260,10 +260,10 @@
               }
             });
 
-            /*End statistics section */          
+            /*End statistics section */
           });
         });
-      });    
+      });
     }   
   };
 
@@ -271,7 +271,7 @@
     dimmed: false,
     dpi: 100,
     paper: 'us-letter'
-  }; 
+  };
 })(jQuery, window, document);
 
 $(function() {
@@ -281,8 +281,8 @@ $(function() {
     $error.html('Oops, your browser doesn\'t support the HTML 5 File API. Work is underway to improve compatibilty, hang tight!').appendTo($('#dock > .container'));
   } else if (typeof fountain === 'undefined') {
     $('#file-api').remove();
-    $error.html('Oops, the necessary files don\'t seem to have been included. You need fountain.js/fountain.min.js!').appendTo($('#dock > .container'));  
-  } else {    
+    $error.html('Oops, the necessary files don\'t seem to have been included. You need fountain.js/fountain.min.js!').appendTo($('#dock > .container'));
+  } else {
     $('#fountain-js').fountain();
-  }  
+  }
 });
