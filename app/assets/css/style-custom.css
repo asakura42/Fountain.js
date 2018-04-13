@@ -1,9 +1,17 @@
-/* .page > p {
-    font-style: italic;
-}*/
-.title-page, .toc-page, .script-page{
-	display:none;
+/* Dark Theme */
+:root {
+	--low-dark: #222222;
+	--high-dark: #333333;
+	--low-light: #CCCCCC;
+	--high-light: #FFFFFF;
 }
+
+/* Atom Theme */
+:root {
+	--low-dark: #21252B;
+	--high-dark: #282C34;
+}
+
 body {
 	background-color: #333333;
 }
@@ -13,7 +21,12 @@ body p{
 }
 
 .toolbar {
-	display: none;
+	position: fixed;
+	z-index: 201;
+}
+
+#workspace #script {
+	margin: 50px auto 0 auto;
 }
 
 #workspace #script.dpi100 .page {
@@ -90,4 +103,47 @@ body p{
 
 .charts {
 	margin-bottom: 2em;
+}
+
+/* Dark Theme */
+.dark-theme .toolbar {
+	background: var(--low-dark);
+}
+
+.dark-theme #workspace #script .page {
+	background: var(--high-dark);
+	border: 1px black solid;
+	color: var(--low-light);
+}
+
+body.dark-theme {
+	background-color: var(--low-dark);
+}
+
+.dark-theme #workspace #script .page .highcharts-background {
+	fill: var(--high-dark);
+}
+
+.dark-theme #workspace #script .page .highcharts-point {
+	stroke: var(--high-dark);
+}
+
+.dark-theme #workspace #script .page #stats-sequences .highcharts-point {
+	stroke-width: 0;
+}
+
+.dark-theme #workspace #script .page .highcharts-axis-labels text {
+	fill: var(--low-light); !important;
+}
+
+.dark-theme #workspace #script .page .highcharts-data-label text tspan {
+	fill: var(--high-light);
+}
+
+.dark-theme #workspace #script .page .highcharts-data-label text tspan.highcharts-text-outline {
+	display: none;
+}
+
+.dark-theme #workspace #script .page.toc-page h3, .dark-theme #workspace #script .script-page h3::before {
+	color: var(--low-light);
 }

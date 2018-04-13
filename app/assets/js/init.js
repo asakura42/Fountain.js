@@ -22,11 +22,11 @@ var counter = 0
 var prev_text = ''
 
 // workspace
-var $dock       = $(document.getElementById('dock'))
+var $body       = $(document.getElementById('fountain-js'))
+  , $dock       = $(document.getElementById('dock'))
   , $workspace  = $(document.getElementById('workspace'))
   , $title      = $(document.getElementById('script-title'))
   , $navigation = $(document.getElementById('navigation'))
-  , $toolbar    = $(document.getElementById('toolbar'))
   , $toolbar    = $(document.getElementById('toolbar'))
   , $script     = $(document.getElementById('script')).addClass('us-letter').addClass('dpi' + '100')
   , $backdrop   = $(document.createElement('div')).addClass('backdrop')
@@ -35,6 +35,26 @@ $(document).ready(function(){
   ParserAndPrint()
   setInterval(ParserAndPrint, 1000)
 })
+
+var cookie = {}
+
+cookie.script_visible = getCookie("script_visible");
+
+$toolbar.find('.resize').on('click', function () {
+  $('.title-page, .toc-page, .script-page').fadeToggle(400, function(){
+    let val = cookie.script_visible === 'false'? 'true' : 'false';
+     setCookie("script_visible", val );
+  })
+});
+
+cookie.dark_theme = getCookie("dark_theme");
+if( cookie.dark_theme === 'true') $body.addClass('dark-theme')
+$toolbar.find('.dim').on('click', function () {
+  $body.toggleClass('dark-theme')
+  setCookie("dark_theme", $body.hasClass('dark-theme') );
+});
+
+console.log(cookie)
 
 var ParserAndPrint = function () {
   counter++
@@ -133,6 +153,10 @@ var ParserAndPrint = function () {
 
         if ( counter === 1 )
           $workspace.fadeIn()
+
+          if( cookie.script_visible === 'false'){
+            $('.title-page, .toc-page, .script-page').hide()
+          };
       }
     })
   )
@@ -404,4 +428,28 @@ function msToHMS( ms ) {
     seconds = ("0" + seconds).slice(-2);
 
     return minutes + ':' + seconds
+}
+
+/* Cookie */
+function setCookie(cname, cvalue, exdays) {
+	if (exdays == null){ exdays = 15;}
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length,c.length);
+        }
+    }
+    return "";
 }
