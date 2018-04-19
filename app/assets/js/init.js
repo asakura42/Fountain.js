@@ -21,6 +21,8 @@ var page = function (html, className) {
 var counter = 0
 var prev_text = ''
 
+var char_per_minutes = 1300
+
 // workspace
 var $body       = $(document.getElementById('fountain-js'))
   , $dock       = $(document.getElementById('dock'))
@@ -53,8 +55,6 @@ $toolbar.find('.dim').on('click', function () {
   $body.toggleClass('dark-theme')
   setCookie("dark_theme", $body.hasClass('dark-theme') );
 });
-
-console.log(cookie)
 
 var ParserAndPrint = function () {
   counter++
@@ -167,7 +167,7 @@ var SumDialogs = function( dialogs ) {
   var charactersColor = []
 
   var unit = $('#unit').val()
-  //
+
   dialogs.forEach(function(line) {
     if( unit === "lines" ) {
       charactersStats[line.character] = charactersStats[line.character] === undefined ? 1 : charactersStats[line.character] + 1
@@ -208,7 +208,7 @@ var AnalyseDialogs = function() {
     let character = $(this).children('h4').text().replace(/ *\([^)]*\) */g, "")
     let raw_text = $(this).children('p').text().trim().replace('/\s+/gi', ' ')
     let wordCount = raw_text.split(' ').length;
-    dialogs.push( {'character': character, 'wordCount': wordCount, 'sequence': $(this).data('seqindex'), 'color': $(this).children('h4').css("color"), 'text':  raw_text, 'time':  raw_text.length * 60 * 1000 / 1000 /* 100 chracter for one minutes. needs milliseconds */} )
+    dialogs.push( {'character': character, 'wordCount': wordCount, 'sequence': $(this).data('seqindex'), 'color': $(this).children('h4').css("color"), 'text':  raw_text, 'time':  raw_text.length * 60 * 1000 / char_per_minutes /* needs milliseconds */} )
   })
 
   return dialogs
@@ -258,7 +258,6 @@ function SumDialogStatsCategories( stats_in, characters, cat ) {
 }
 
 var DrawChart = function( series, id, title ) {
-  console.log()
   if ( id === undefined ) id = 'stats-characters'
   if ( title === undefined ) title = 'characters'
   var unit = $('#unit').val()
@@ -415,7 +414,7 @@ var DrawChartSequence = function( dialogs ) {
 
 function msToHMS( ms ) {
     // 1- Convert to seconds:
-    var seconds = ms / 1000;
+    var seconds = ms / char_per_minutes; // 1000 for english
     // 2- Extract hours:
     //var hours = parseInt( seconds / 3600 ); // 3,600 seconds in 1 hour
     seconds = seconds % 3600; // seconds remaining after extracting hours

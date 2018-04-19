@@ -136,7 +136,7 @@ body.dark-theme {
 	fill: var(--low-light); !important;
 }
 
-.dark-theme #workspace #script .page .highcharts-data-label text tspan {
+.dark-theme #workspace #script .page .highcharts-data-label text tspan, .dark-theme #workspace #script .highcharts-title tspan {
 	fill: var(--high-light);
 }
 
