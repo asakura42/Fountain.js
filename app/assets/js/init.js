@@ -65,7 +65,8 @@ function AddToolbarButtons() {
 
     <ul id="toolbar">
       <li class="resize"><a data-tooltip="Resize Script">Resize Script</a></li>
-    <li class="dim"><a data-tooltip="Toggle Theme">Toggle Theme</a></li>
+      <li class="dim"><a data-tooltip="Toggle Theme">Toggle Theme</a></li>
+	  <li class="dock"><a data-tooltip="Return To Dock">Return To Dock</a></li>
     </ul>
   </div>
   `
