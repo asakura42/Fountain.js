@@ -1,4 +1,105 @@
 {
+  "characters": {
+    "zawn":{
+        "color": "#000080"
+    },
+    "eurg":{
+        "color": "#9966CC"
+    },
+    "krilg":{
+        "color": "#FF0000"
+    },
+    "frude":{
+        "color": "#800000"
+    },
+    "berde":{
+        "color": "#23B8DC"
+    },
+    "plaude":{
+        "color": "#FF8080"
+    },
+    "john":{
+        "color": "#004586"
+    },
+    "jack":{
+        "color": "#FF9966"
+    },
+    "seb":{
+        "color": "#33A3A3"
+    },
+    "nath":{
+        "color": "#FF4DFF"
+    },
+    "abrahamII":{
+        "color": "#99CCFF"
+    },
+    "fletcher":{
+        "color": "#B3B300"
+    },
+    "narrateur":{
+        "color": "#94006B"
+    },
+    "nestor":{
+        "color": "#5C8526"
+    },
+    "tertiaires":{
+        "color": "#808080"
+    },
+    "lieux":{
+        "color": "#004891"
+    },
+    "chancelier":{
+        "color": "#355e00"
+    },
+    "kustner":{
+        "color": "#808019"
+    },
+    "ferguson":{
+        "color": "#ff00ff"
+    },
+    "josiane":{
+        "color": "#eb613d"
+    },
+    "mccornicle":{
+        "color": "#33a3a3"
+    },
+    "alphonse":{
+        "color": "#804c19"
+    },
+    "gaylord":{
+        "color": "#6b4794"
+    },
+    "steve":{
+        "color": "#94bd5e"
+    },
+    "kev":{
+        "color": "#33cc66"
+    },
+    "kornitchev":{
+        "color": "#666600"
+    },
+    "croisiere":{
+        "color": "#808080"
+    },
+    "generique":{
+        "color": "#944794"
+    },
+    "annonce":{
+        "color": "#FF53A9"
+    },
+    "selenograph":{
+        "color": "#D5D500"
+    },
+    "moonmagasine":{
+        "color": "#808080"
+    },
+    "apollotimes":{
+        "color": "#85D500"
+    },
+    "bricodecotricot":{
+        "color": "#D5006A"
+    }
+  },
   "categories": {
     "gender": {
       "male": {
@@ -44,27 +145,27 @@
       }
   },
   "species": {
-	"humain": {
-	  "color": "Green",
-	  "series": [
+  "humain": {
+    "color": "Green",
+    "series": [
       "le chancelier",
-		"zawn",
-		"berde",
-		"krilg",
-		"eurg",
-		"plaude",
-		"frude"
-	  ]
-	},
-	"vermoid": {
-	  "color": "Red",
-	  "series": [
-		"ferguson",
-		"agent spécial",
-		"nestor",
-		"kreutzberg",
-		"gaylord"
-	  ]
+    "zawn",
+    "berde",
+    "krilg",
+    "eurg",
+    "plaude",
+    "frude"
+    ]
+  },
+  "vermoid": {
+    "color": "Red",
+    "series": [
+    "ferguson",
+    "agent spécial",
+    "nestor",
+    "kreutzberg",
+    "gaylord"
+    ]
   }}
   }
 }

@@ -20,6 +20,11 @@ body p{
 	line-height: 20px!important;
 }
 
+.container {
+	width: 100%;
+	max-width: 850px;
+}
+
 .toolbar {
 	position: fixed;
 	z-index: 201;

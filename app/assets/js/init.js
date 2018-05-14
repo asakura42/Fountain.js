@@ -29,32 +29,64 @@ var $body       = $(document.getElementById('fountain-js'))
   , $workspace  = $(document.getElementById('workspace'))
   , $title      = $(document.getElementById('script-title'))
   , $navigation = $(document.getElementById('navigation'))
-  , $toolbar    = $(document.getElementById('toolbar'))
   , $script     = $(document.getElementById('script')).addClass('us-letter').addClass('dpi' + '100')
   , $backdrop   = $(document.createElement('div')).addClass('backdrop')
-
-$(document).ready(function(){
-  ParserAndPrint()
-  setInterval(ParserAndPrint, 1000)
-})
 
 var cookie = {}
 
 cookie.script_visible = getCookie("script_visible");
 
-$toolbar.find('.resize').on('click', function () {
-  $('.title-page, .toc-page, .script-page').fadeToggle(400, function(){
-    let val = cookie.script_visible === 'false'? 'true' : 'false';
-     setCookie("script_visible", val );
-  })
-});
+var characters = {}
 
-cookie.dark_theme = getCookie("dark_theme");
-if( cookie.dark_theme === 'true') $body.addClass('dark-theme')
-$toolbar.find('.dim').on('click', function () {
-  $body.toggleClass('dark-theme')
-  setCookie("dark_theme", $body.hasClass('dark-theme') );
-});
+$(document).ready(function(){
+  ParseCharacters()
+  AddToolbarButtons()
+  ParserAndPrint()
+  setInterval(ParserAndPrint, 1000)
+})
+
+function ParseCharacters() {
+  fetch('assets/json/characters.json')
+    .then(response => response.text())
+    .then(function(text) {
+      characters = JSON.parse(text)
+  })
+}
+
+function AddToolbarButtons() {
+  let toolbar_header = $('header.toolbar')
+  let content = `
+  <div class="container">
+    <ul id="inspector">
+    <li></li>
+    </ul>
+
+    <p id="script-title"></p>
+
+    <ul id="toolbar">
+      <li class="resize"><a data-tooltip="Resize Script">Resize Script</a></li>
+    <li class="dim"><a data-tooltip="Toggle Theme">Toggle Theme</a></li>
+    </ul>
+  </div>
+  `
+  toolbar_header.html(content)
+    let $toolbar    = $(document.getElementById('toolbar'))
+  $title      = $(document.getElementById('script-title'))
+
+  $toolbar.find('.resize').on('click', function () {
+    $('.title-page, .toc-page, .script-page').fadeToggle(400, function(){
+      let val = cookie.script_visible === 'false'? 'true' : 'false';
+       setCookie("script_visible", val );
+    })
+  });
+
+  cookie.dark_theme = getCookie("dark_theme");
+  if( cookie.dark_theme === 'true') $body.addClass('dark-theme')
+  $toolbar.find('.dim').on('click', function () {
+    $body.toggleClass('dark-theme')
+    setCookie("dark_theme", $body.hasClass('dark-theme') );
+  });
+}
 
 var ParserAndPrint = function () {
   counter++
@@ -66,7 +98,7 @@ var ParserAndPrint = function () {
         prev_text = text
         if (result.title && result.html.title_page) {
           if ( ! $('.title-page').length )
-          	$script.append(page(result.html.title_page, 'title-page'))
+              $script.append(page(result.html.title_page, 'title-page'))
           $title.html(result.title || 'Untitled')
         }
 
@@ -128,8 +160,10 @@ var ParserAndPrint = function () {
         if ( filterElm.val() === null ) filterElm.val( 0 )
 
         $('.dialogue').each(function(){
-          let character = $(this).children('h4').text().replace(' (SUITE)', '' )
-          $(this).addClass(character.toLowerCase()) // Add character name as class of character dialog titles
+          let character = $(this).children('h4').text().replace(' (SUITE)', '' ).toLowerCase()
+          let color = characters.characters[character] !== undefined && characters.characters[character].color !== undefined ? characters.characters[character].color : "#7d7d7d"
+          $(this).children('h4').css('color', color)
+          $(this).addClass(character) // Add character name as class of character dialog titles
           $(this).html(($(this).html()).replace(/(\w)( )([!\?:;%»]|&raquo;)/, '$1&nbsp;$3')) // Add non-breaking space for French
         })
 
@@ -215,26 +249,21 @@ var AnalyseDialogs = function() {
 }
 
 function DrawCategoriesChart(dialogs) {
-  fetch('assets/json/characters.json')
-    .then(response => response.text())
-    .then(function(text) {
-      var characters = JSON.parse(text)
-      // For each categories
-      for( let cat in characters.categories) {
-        var dialog_categories = SumDialogStatsCategories(SumDialogs(FilterDialogs(dialogs)), characters, cat)
-        var id = 'stats-categories_' + cat
-        if($("#" + id).length == 0) {
-          $('#stats-categories').append( '<div id="' + id +'" class="charts"></div>' )
-        }
-        var chart_catergories = DrawChart(dialog_categories, id, cat)
-      }
-    })
+  // For each categories
+  for( let cat in characters.categories) {
+    var dialog_categories = SumDialogStatsCategories(SumDialogs(FilterDialogs(dialogs)), characters, cat)
+    var id = 'stats-categories_' + cat
+    if($("#" + id).length == 0) {
+      $('#stats-categories').append( '<div id="' + id +'" class="charts"></div>' )
+    }
+    var chart_catergories = DrawChart(dialog_categories, id, cat)
+  }
 }
 
 function SumDialogStatsCategories( stats_in, characters, cat ) {
   let stats_out = {stats: [], colors:[]}
   stats_out.stats["undefined"] = 0
-  stats_out.colors["undefined"] = "black"
+  stats_out.colors["undefined"] = "#7d7d7d"
   stats_in.group = []
   Object.keys(characters.categories[cat]).forEach(function(val){
     stats_out.stats[val] = 0
@@ -339,13 +368,13 @@ var DrawChartSequence = function( dialogs ) {
   var x = 0
   var unit = $('#unit').val()
   dialogs.forEach(function(line) {
-	  if ( characters[line.character] === undefined ) {
+      if ( characters[line.character] === undefined ) {
       characters[line.character] = { 'idx': i, 'color': line.color}
       i = i + 1
     }
-	  let x2 = unit === 'lines' ? x + 1 : unit === 'time' ? x + line.time : x + line.wordCount
-	  data.push({'x': x, 'x2': x2, 'y': characters[line.character].idx, 'text': line.text})
-	  x = x2
+      let x2 = unit === 'lines' ? x + 1 : unit === 'time' ? x + line.time : x + line.wordCount
+      data.push({'x': x, 'x2': x2, 'y': characters[line.character].idx, 'text': line.text})
+      x = x2
   })
   var type = unit === 'time' ? 'datetime' : 'linear'
   var chart = Highcharts.chart('stats-sequences', {
@@ -431,7 +460,7 @@ function msToHMS( ms ) {
 
 /* Cookie */
 function setCookie(cname, cvalue, exdays) {
-	if (exdays == null){ exdays = 15;}
+    if (exdays == null){ exdays = 15;}
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
     var expires = "expires="+ d.toUTCString();
