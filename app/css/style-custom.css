@@ -156,7 +156,7 @@ body.dark-theme {
 }
 
 .dark-theme #workspace #script .page .highcharts-axis-labels text {
-	fill: var(--low-light); !important;
+	fill: var(--low-light)!important;
 }
 
 .dark-theme #workspace #script .page .highcharts-data-label text tspan, .dark-theme #workspace #script .highcharts-title tspan {
