@@ -4,6 +4,8 @@ let filename = url.substring(url.lastIndexOf('/') + 1)
 // Get Foutain Name
 filename = filename.replace('html', 'fountain')
 
+var timemout_run = false
+
 var page = function (html, className) {
   var $output = $(document.createElement('div')).addClass('page').html(html)
   if (className) {
@@ -30,7 +32,6 @@ var $body       = $(document.getElementById('fountain-js'))
   , $title      = $(document.getElementById('script-title'))
   , $navigation = $(document.getElementById('navigation'))
   , $script     = $(document.getElementById('script')).addClass('us-letter').addClass('dpi' + '100')
-  , $backdrop   = $(document.createElement('div')).addClass('backdrop')
 
 var cookie = {}
 
@@ -38,11 +39,12 @@ cookie.script_visible = getCookie("script_visible");
 
 var characters = {}
 
+var refresh
 $(document).ready(function(){
   ParseCharacters()
   AddToolbarButtons()
   ParserAndPrint()
-  setInterval(ParserAndPrint, 1000)
+  refresh = setInterval(ParserAndPrint, 1000)
 })
 
 function ParseCharacters() {
@@ -66,7 +68,7 @@ function AddToolbarButtons() {
     <ul id="toolbar">
       <li class="resize"><a data-tooltip="Resize Script">Resize Script</a></li>
       <li class="dim"><a data-tooltip="Toggle Theme">Toggle Theme</a></li>
-	  <li class="dock"><a data-tooltip="Return To Dock">Return To Dock</a></li>
+      <li class="dock"><a data-tooltip="Full Width">Full Width</a></li>
     </ul>
   </div>
   `
@@ -87,114 +89,179 @@ function AddToolbarButtons() {
     $body.toggleClass('dark-theme')
     setCookie("dark_theme", $body.hasClass('dark-theme') );
   });
+
+  cookie.full_width = getCookie("full_width");
+  if( cookie.full_width === 'true') $script.addClass('full_width')
+  $toolbar.find('.dock').on('click', function () {
+    $script.toggleClass('full_width')
+    window.dispatchEvent(new Event('resize'))
+    setCookie("full_width", $script.hasClass('full_width') )
+  });
 }
+
+
 
 var ParserAndPrint = function () {
   counter++
+  console.log(counter)
   fetch(filename)
   .then(response => response.text())
   .then(text =>
-      fountain.parse(text, true, function (result) {
-      if (result && text !== prev_text) {
-        prev_text = text
-        if (result.title && result.html.title_page) {
-          if ( ! $('.title-page').length )
-              $script.append(page(result.html.title_page, 'title-page'))
-          $title.html(result.title || 'Untitled')
-        }
+    PrintFountainText( text )
+  ).catch(function(error) {
+    clearTimeout(refresh)
+    let html = `
+      <section id="dock">
+        <div class="container">
+          <div id="file-api">
+            <p>To parse a <a href="http://www.fountain.io">Fountain</a> screenplay document,<br/>simply drag the file into this box.</p>
+          </div>
+        </div>
+      </section>`
+    $(html).insertBefore($script)
+    $workspace.fadeIn()
+    $('#file-api').fadeIn()
+    var dragOver = function (e) {
+    $(this).addClass('over');
+    e.stopPropagation();
+    e.preventDefault();
+  };
 
-        document.title = result.title
+  var dragLeave = function (e) {
+      $(this).removeClass('over');
+      e.stopPropagation();
+      e.preventDefault();
+  };
 
-        // toc
-        if ( ! $('.toc-page').length )
-          $script.append(page('<h2>Table des Matières</h2><h3>Sequences</h3><ol id="toc"></ol><h3>Stats</h3><ol id="toc-stats"><li><a href="#stats">Characters</a><li><a href="#stats-sequences">X-Range</a></li></ol>', 'toc-page'))
+  var loadScript = function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    e = e.originalEvent;
 
-        // script
-        if ( ! $('.script-page').length ) {
-          $script.append(page(result.html.script, 'script-page'))
-        } else {
-          $('.script-page').html(result.html.script)
-        }
+    $(this).removeClass('over');
 
-        // Table of Content
-        let sequencesTitles = $('.script-page h3')
-        let tocHTML = ''
-        sequencesTitles.each(function (i) {
-          this.id = 'sequence-' + ( i + 1 )
-          this.dataset.index = i + 1
-          tocHTML = tocHTML + '<li><a href="#sequence-' + ( i + 1 ) + '">' + this.innerText + '</a></li>'
-        })
-        $('#toc').html( tocHTML )
-        $('html').smoothScroll() // Activate smooth scrool on all internal links
+    var file   = e.dataTransfer.files[0]
+      , reader = new FileReader();
 
-        if ( ! $('.stats-page').length )
-          $script.append(page(`
-            <h2>Statistiques</h2>
-            <div id="stats-filter">
-              <div class="filter-field filter-sequences">
-               <label for="filter">Sequence: </label>
-               <select id="filter">
-                  <option value="0" selected>All</option>
-               </select>
-              </div>
-              <div class="filter-field filter-unit">
-               <label for="unit">Unit: </label>
-               <select id="unit">
-                  <option value="lines">Lines</option>
-                  <option value="words">Words</option>
-                  <option value="time" selected>Time</option>
-               </select>
-               </div>
-            </div>
-            <div id="stats-characters" class="charts"></div>
-            <div id="stats-sequences" class="charts"></div>
-            <div id="stats-categories" class="charts"></div>`, 'stats-page')
-          )
+    if (file) {
+      reader.onload = function(evt) {
+        $('#file-api').hide()
 
-        var filterElm = $('#filter')
-        let sequence_init_val = filterElm.val()
-        filterElm.html('<option value="0" selected>All</option>')
-        $('.script-page h3').each(function(){
-          filterElm.append('<option value=' + $(this).data('index') +'>' + $(this).data('index') + '. ' + $(this).text() + '</option>')
-        })
-        filterElm.val(sequence_init_val)
-        if ( filterElm.val() === null ) filterElm.val( 0 )
+          PrintFountainText(evt.target.result)
 
-        $('.dialogue').each(function(){
-          let character = $(this).children('h4').text().replace(' (SUITE)', '' ).toLowerCase()
-          let color = characters.characters[character] !== undefined && characters.characters[character].color !== undefined ? characters.characters[character].color : "#7d7d7d"
-          $(this).children('h4').css('color', color)
-          $(this).addClass(character) // Add character name as class of character dialog titles
-          $(this).html(($(this).html()).replace(/(\w)( )([!\?:;%»]|&raquo;)/, '$1&nbsp;$3')) // Add non-breaking space for French
-        })
-
-        $('.dialogue').each(function(){
-          var h3 = $(this).prevAll( 'h3:first' )
-          this.dataset.seqindex = h3.data('index')
-        })
-
-        var dialogs = AnalyseDialogs()
-
-        var chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
-        var chartSeq = DrawChartSequence(FilterDialogs(dialogs))
-
-        DrawCategoriesChart(dialogs)
-
-        $('#filter, #unit').change(function(){
-          chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
-          chartSeq = DrawChartSequence(FilterDialogs(dialogs))
-          DrawCategoriesChart(dialogs)
-        })
-
-        if ( counter === 1 )
-          $workspace.fadeIn()
-
-          if( cookie.script_visible === 'false'){
-            $('.title-page, .toc-page, .script-page').hide()
-          };
       }
-    })
-  )
+
+      reader.readAsText(file);
+    }
+  };
+	 $(document.getElementById('file-api')).fadeIn().on('dragleave', dragLeave).on('dragover', dragOver).on('drop', loadScript);
+})
+}
+
+function PrintFountainText( text ) {
+
+  fountain.parse(text, true, function (result) {
+    if (result && text !== prev_text) {
+      prev_text = text
+      if (result.title && result.html.title_page) {
+        if ( ! $('.title-page').length )
+            $script.append(page(result.html.title_page, 'title-page'))
+        $title.html(result.title || 'Untitled')
+      }
+
+      document.title = result.title
+
+    $('#doc').hide()
+
+      // toc
+      if ( ! $('.toc-page').length )
+        $script.append(page('<h2>Table des Matières</h2><h3>Sequences</h3><ol id="toc"></ol><h3>Stats</h3><ol id="toc-stats"><li><a href="#stats">Characters</a><li><a href="#stats-sequences">X-Range</a></li></ol>', 'toc-page'))
+
+      // script
+      if ( ! $('.script-page').length ) {
+        $script.append(page(result.html.script, 'script-page'))
+      } else {
+        $('.script-page').html(result.html.script)
+      }
+
+      // Table of Content
+      let sequencesTitles = $('.script-page h3')
+      let tocHTML = ''
+      sequencesTitles.each(function (i) {
+        this.id = 'sequence-' + ( i + 1 )
+        this.dataset.index = i + 1
+        tocHTML = tocHTML + '<li><a href="#sequence-' + ( i + 1 ) + '">' + this.innerText + '</a></li>'
+      })
+      $('#toc').html( tocHTML )
+      $('html').smoothScroll() // Activate smooth scrool on all internal links
+
+      if ( ! $('.stats-page').length )
+        $script.append(page(`
+          <h2>Statistiques</h2>
+          <div id="stats-filter">
+            <div class="filter-field filter-sequences">
+             <label for="filter">Sequence: </label>
+             <select id="filter">
+                <option value="0" selected>All</option>
+             </select>
+            </div>
+            <div class="filter-field filter-unit">
+             <label for="unit">Unit: </label>
+             <select id="unit">
+                <option value="lines">Lines</option>
+                <option value="words">Words</option>
+                <option value="time" selected>Time</option>
+             </select>
+             </div>
+          </div>
+          <div id="stats-characters" class="charts"></div>
+          <div id="stats-sequences" class="charts"></div>
+          <div id="stats-categories" class="charts"></div>`, 'stats-page')
+        )
+
+      var filterElm = $('#filter')
+      let sequence_init_val = filterElm.val()
+      filterElm.html('<option value="0" selected>All</option>')
+      $('.script-page h3').each(function(){
+        filterElm.append('<option value=' + $(this).data('index') +'>' + $(this).data('index') + '. ' + $(this).text() + '</option>')
+      })
+      filterElm.val(sequence_init_val)
+      if ( filterElm.val() === null ) filterElm.val( 0 )
+
+      $('.dialogue').each(function(){
+        let character = $(this).children('h4').text().replace(' (SUITE)', '' ).toLowerCase()
+        let color = characters.characters[character] !== undefined && characters.characters[character].color !== undefined ? characters.characters[character].color : "#7d7d7d"
+        $(this).children('h4').css('color', color)
+        $(this).addClass(character) // Add character name as class of character dialog titles
+        $(this).html(($(this).html()).replace(/(\w)( )([!\?:;%»]|&raquo;)/, '$1&nbsp;$3')) // Add non-breaking space for French
+      })
+
+      $('.dialogue').each(function(){
+        var h3 = $(this).prevAll( 'h3:first' )
+        this.dataset.seqindex = h3.data('index')
+      })
+
+      var dialogs = AnalyseDialogs()
+
+      var chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
+      var chartSeq = DrawChartSequence(FilterDialogs(dialogs))
+
+      DrawCategoriesChart(dialogs)
+
+      $('#filter, #unit').change(function(){
+        chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
+        chartSeq = DrawChartSequence(FilterDialogs(dialogs))
+        DrawCategoriesChart(dialogs)
+      })
+
+      if ( counter === 1 )
+        $workspace.fadeIn()
+
+        if( cookie.script_visible === 'false'){
+          $('.title-page, .toc-page, .script-page').hide()
+        };
+    }
+  })
 }
 
 var SumDialogs = function( dialogs ) {

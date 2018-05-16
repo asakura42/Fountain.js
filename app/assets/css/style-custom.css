@@ -12,8 +12,24 @@
 	--high-dark: #282C34;
 }
 
+/* Font */
+@font-face {
+  font-family: 'fontello';
+  src: url('./font/fontello.woff2?73082120') format('woff2');
+  src: url('./font/fontello.eot?73082120#iefix') format('embedded-opentype'),
+       url('./font/fontello.woff?73082120') format('woff'),
+       url('./font/fontello.ttf?73082120') format('truetype'),
+       url('./font/fontello.svg?73082120#fontello') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
 	background-color: #333333;
+}
+
+body#fountain-js section#workspace #script.full_width {
+	width: 100%;
 }
 
 body p{
@@ -32,6 +48,7 @@ body p{
 
 #workspace #script {
 	margin: 50px auto 0 auto;
+	overflow: hidden;
 }
 
 #workspace #script.dpi100 .page {
@@ -157,3 +174,13 @@ body.dark-theme {
 	border-bottom: 1px black solid;
 	/*box-shadow: 10px 0px 10px 0px rgba(0,0,0,0.5);*/
 }
+
+/*
+p:before {
+	font-family: 'fontello';
+	font-variant: normal;
+	font-weight: normal;
+	text-transform: none;
+	content: '\e800';
+}
+*/
