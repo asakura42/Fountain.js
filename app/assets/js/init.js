@@ -20,6 +20,23 @@ var page = function (html, className) {
   return $output
 }
 
+$('#fountain-js').prepend(`<section id="workspace">
+      <header class="toolbar">
+        <div class="container">
+          <ul id="inspector">
+            <li></li>
+          </ul>
+
+          <p id="script-title"></p>
+
+          <ul id="toolbar">
+          </ul>
+
+        </div>
+      </header>
+      <div id="script"></div>
+    </section>`)
+
 var counter = 0
 var prev_text = ''
 
@@ -115,7 +132,7 @@ var ParserAndPrint = function () {
           </div>
         </div>
       </section>`
-    $(html).insertBefore($script)
+    $(html).insertAfter($workspace)
     $workspace.fadeIn()
     $('#file-api').fadeIn()
     var dragOver = function (e) {

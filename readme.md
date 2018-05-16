@@ -1,116 +1,70 @@
-fountain-js
+# Responsive Fountain Screenplay with Dialog Analyses
 ===========
 
-This is a fork of fountain-js. The goal of this fork is to integrate statistics features to help bring a screenplay into production.
+This webapp aims to provide advanced statistics for your Screenplay written in fountain syntax.
 
-Currently, there is a locations report feature that lists out all locations in the screenplay and orders them by scene count and groups them by interior vs. exterior.
+This project started as a fork of the **sbddesign**'s [Fountain.js mod](https://github.com/sbddesign/Fountain.js) who added location reports and make few code fixes. He based his work on the original **mattdaly**'s [Fountain.js](https://github.com/mattdaly/Fountain.js) parser.  In the end, I removed location reports for now and some files, to make it answers my own personal needs.
 
-Future additions might include a characters report and dialogue vs. action breakdown.
+The result is an  intensive mod of the [Fountain.js](http://mattdaly.github.io/Fountain.js/) app demo, with tons of new features.
 
-fountain-js is a JavaScript based parser for the screenplay format [Fountain](http://fountain.io/).
+## Features
 
-You can [try fountain-js out](http://mattdaly.github.com/Fountain.js/). The file system currently uses the HTML 5 File API, which means not all browsers support it, you'll be told if yours doesn't - I'm working on compatiblity. CSS styling isn't complete, so some elements aren't placed correctly and the text spacing might not be quite right, and, as you'll see, individual pages aren't currently supported either.
+### Navigation
 
-# Syntax Support
+- Table of Contents Page with smooth scrolling links
+- Automatic sequences numbering
 
-As of version 0.1.8 the full Fountain syntax is supported.
+### Initialization
 
-Currently fountain-js supports a limited range of key-value pairs for title pages - 
+- Drag and drop file input can be automatically bypassed (see Usage)
+- Drag and drop box as fallback (see Usage)
+- Automatically refresh the page (allow to work on side application and have real-time render and stats display)
+- Save various user variables as cookies (theme, stats settings etc...)
+- Custom characters metadata can be added in a `assets/json/character.json` file, relative to your .html file. The characters.json file is divided in two main categories: Charaters and Categories. See the `characters.json` file in this repo for detailed usage.
 
-* Title, Credit, Author/s, Source, Notes, Draft date, Date, Contact, Copyright
+### Stats and Charts
 
-Work is being done to make title page parsing friendlier, allowing custom key-value pairs, but as of version 0.1.0 only the above are supported.
+- Multi unit dialog analyses (word, characters, time evaluation)
+- Customizable characters per minutes fields for time evaluation
+- Dialog Bar Charts per characters
+- Dialog Bar Charts per characters categories
+- Dialog X-Range chart, with duration evaluation, timecode and line for each dialog
 
-Instructions
-============
+### Style
 
-fountain-js accepts a string value to it's parse function, therefore opening or retrieving files is down to you - open the file, retrieve it's string contents and pass it to fountain-js. 
+- Light theme
+- Dark-Blue theme
+- Full width display (optional)
+- Mobile-friendly responsive design
+- Characters color
 
-The parser doesn't simply change scripts lines in to html, it first splits the script down line by line and generates an array of tokens representing each script element. This tokenized array provides the opportunity to iterate over a script in it's raw state and do some analysis (e.g. we could search for every character element with the name STEEL, we could do this against the HTML using jQuery but it'd be a slower process). By default, fountain-js simply returns the generated html, but you can also gain access to those tokens if you ask for them (more on that below).
+## Usage
 
-To use Fountain.js, either import it within an HTML page or require it as a module inside Node.js (it's available to both by default).
+### Moding
 
-```
-<script type="text/javascript" src="fountain.js"></script>
-<script type="text/javascript">
-  var file = ... open the file from somewhere and get it's string value ...
-  var output = fountain.parse(file);
-</script>
-```
+This project is an experiment. If you plan to use it, I advice you to make a copy/fork, and work on your own version. I may not guarantee backward compatibility, steady updates etc. I design it to answer my own custom need, and decided to share it so it can be useful to others, but I don't plan to make custom support on it. But of course, if you have some proposition to make, feel free to ask / create pull requests!
 
-fountain-js supports both sync and async functionality, the function names remain the same. For async, simply attach a callback to the parse function and handle the result inside that callback.
+You can either use the built-in `index.html` file in the `app` subfolder which have a drag and drop box letting you put any `.fountain` file in it, or duplicate + rename the `index.html` and put it anywhere next to a similarly named `.fountain` file. In this case, be sure to update the scripts and stylesheets paths in the html if needed, so that it points to this `fountain.js` folder. This method of initialization allows to have real time update of the graph, and one dedicate HTML page for each of your fountain file. All data on the page (page title, screenplay text, charts, etc....) are updated based on the fountain file. You don't add to change anything but script and sheets paths (and only if they are broken).
 
-```
-<script type="text/javascript" src="fountain.js"></script>
-<script type="text/javascript">
-  var file = ... open the file from somewhere and get it's string value ...
-  fountain.parse(file, function (output) {
-    // do something
-  });
-</script>
-```
+### Local Usage
 
-The output provided by fountain-js is of a specific format. The output to both sync and async functions is an object literal of the format { title: '...', html: { title_page: '...', script: '...' } }. If a title was set in the original file the title property will be set to it (as plain text with formatting removed), the html.title_page property contains the html generated for any title page syntax definitions, and the html.script property contains the html generated for the rest of the script.
+The auto-load feature based on `.html` file name only works in [FireFox](https://www.mozilla.org/fr/firefox/new/), which supports the Fetch API for local files. It will not work in browsers which don't support this feature.
 
-```
-<script type="text/javascript" src="fountain.js"></script>
-<script type="text/javascript">
-  var file = ... open the file from somewhere and get it's string value ...
-  fountain.parse(file, function (output) {
-    // output.title - 'Big Fish'
-    // output.html.title_page - '<h1>Big Fish</h1><p class="author">...'
-    // output.html.script - '<h2><span class="bold">FADE IN:</span></h2>...'
-  });
-</script>
-```
+### Online Usage
 
-If you want access to the tokens that fountain-js generates, simply attach a true parameter to your parse calls. Requesting tokens adds a tokens property to the output generated by fountain-js. That tokens property is an array of object literals, each of the form { type: '...', text: '...' }, some elements have additional properties (e.g. the type 'scene_heading' also has a property called 'scene-number' if a scene number was attached to that specific scene heading). It should also be noted that fountain-js iterates the script from bottom to top, therefore requesting tokens requires reversing the array before fountain-js returns you the data, this might add a slight delay (milliseconds in most cases) on large scripts.
+Simply upload to the unzipped repo archive in your server.
 
-```
-<script type="text/javascript" src="fountain.js"></script>
-<script type="text/javascript">
-  var file = ... open the file from somewhere and get it's string value ...
-  fountain.parse(file, true, function (output) {
-    // output.title - 'Big Fish'
-    // output.html.title_page - '<h1>Big Fish</h1><p class="author">...'
-    // output.html.script - '<h2><span class="bold">FADE IN:</span></h2>...'
-    // output.tokens - [ ... { type: 'transition'. text: '<span class="bold">FADE IN:</span>' } ... ]
-  });
-</script>
-```
+## Todos
 
-The tokens for the Brick & Steel sample found on the fountain.io website would look as follows (just a small sample):
+- Add descriptions in the X-Range graph.
+- Change icons
 
-```
-[ 
-  ..., 
-  { type="scene_heading", text="EXT. BRICK'S PATIO - DAY", scene_number="1"}, 
-  { type="action", text="A gorgeous day. The su...emplating -- something."}, 
-  { type="action", text="The SCREEN DOOR slides ...es with two cold beers."},  
-  { type="dialogue_begin"}, 
-  { type="character", text="STEEL"}, 
-  { type="dialogue", text="Beer's ready!"}, 
-  { type="dialogue_end"}, 
-  { type="dialogue_begin"}, 
-  { type="character", text="BRICK"}, 
-  { type="dialogue", text="Are they cold?"}, 
-  { type="dialogue_end"}, 
-  { type="page_break"}, 
-  { type="dialogue_begin"}, 
-  { type="character", text="STEEL"}, 
-  { type="dialogue", text="Does a bear crap in the woods?"}, 
-  { type="dialogue_end"}, 
-  { type="action", text="Steel sits. They laugh at the dumb joke."},
-  { type="dialogue_begin"}, 
-  { type="character", text="STEEL"}, 
-  { type="parenthetical", text="(beer raised)"}, 
-  { type="dialogue", text="To retirement."}, 
-  { type="dialogue_end"}, 
-  { type="dialogue_begin"}, 
-  { type="character", text="BRICK"}, 
-  { type="dialogue", text="To retirement."}, 
-  { type="dialogue_end"}
-  ...
-```
+## Dependencies
 
-As you can see fountain-js attaches some extra tokens, such as 'dialogue_begin' and 'dialogue_end'. These are used to block together sections, in the case of dialogue it allows fountain-js to attach a dual dialogue property to blocks of dialogue.
+- [jquery](https://code.jquery.com/)
+- [jquery.smoothscroll.js](http://mths.be/smoothscroll)
+- [normalize.css](https://necolas.github.io/normalize.css/)
+- [fountain.js](https://github.com/mattdaly/Fountain.js)
+- fountain.js [style.css](https://github.com/mattdaly/Fountain.js)
+- [highcharts.js](https://www.highcharts.com/)
+- highcharts [xrange.js](http://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/demo/x-range/)
