@@ -63,7 +63,7 @@ $(document).ready(function(){
 })
 
 function ParseCharacters() {
-  fetch('assets/json/characters.json')
+  fetch('json/characters.json')
     .then(response => response.text())
     .then(function(text) {
       characters = JSON.parse(text)

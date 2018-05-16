@@ -20,7 +20,7 @@ The result is an  intensive mod of the [Fountain.js](http://mattdaly.github.io/F
 - Drag and drop box as fallback (see Usage)
 - Automatically refresh the page (allow to work on side application and have real-time render and stats display)
 - Save various user variables as cookies (theme, stats settings etc...)
-- Custom characters metadata can be added in a `assets/json/character.json` file, relative to your .html file. The characters.json file is divided in two main categories: Charaters and Categories. See the `characters.json` file in this repo for detailed usage.
+- Custom characters metadata can be added in a `json/characters.json` file, relative to your .html file. The characters.json file is divided in two main categories: Charaters and Categories. See the `characters.json` file in this repo for detailed usage.
 
 ### Stats and Charts
 
