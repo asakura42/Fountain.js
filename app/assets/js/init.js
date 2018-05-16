@@ -23,8 +23,6 @@ var page = function (html, className) {
 var counter = 0
 var prev_text = ''
 
-var char_per_minutes = 1300
-
 // workspace
 var $body       = $(document.getElementById('fountain-js'))
   , $dock       = $(document.getElementById('dock'))
@@ -99,11 +97,10 @@ function AddToolbarButtons() {
   });
 }
 
-
+cookie.char_per_minutes = getCookie("characters_per_minutes") ? getCookie("characters_per_minutes") : 1300;
 
 var ParserAndPrint = function () {
   counter++
-  console.log(counter)
   fetch(filename)
   .then(response => response.text())
   .then(text =>
@@ -213,12 +210,29 @@ function PrintFountainText( text ) {
                 <option value="time" selected>Time</option>
              </select>
              </div>
+			 <div class="filter-field filter-characters-er-minutes">
+             	<label for="unit">Characters per Minutes: </label>
+             	<input type="number" min="1" max="9999" id="characters_per_minutes" value="1300" maxlength="4" size="1">
+             </div>
           </div>
           <div id="stats-characters" class="charts"></div>
           <div id="stats-sequences" class="charts"></div>
           <div id="stats-categories" class="charts"></div>`, 'stats-page')
         )
-
+	  $('#characters_per_minutes').val(cookie.char_per_minutes)
+	  $('#characters_per_minutes').on('keyup click', function(){
+		  let val = $(this).val()
+		  if (val.length > 4) {
+			val = val.slice(0,4)
+			$(this).val( val );
+		  }
+		  cookie.char_per_minutes = val
+		  setCookie("characters_per_minutes", val )
+		  var dialogs = AnalyseDialogs()
+		  chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
+		  chartSeq = DrawChartSequence(FilterDialogs(dialogs))
+		  DrawCategoriesChart(dialogs)
+	  })
       var filterElm = $('#filter')
       let sequence_init_val = filterElm.val()
       filterElm.html('<option value="0" selected>All</option>')
@@ -256,7 +270,6 @@ function PrintFountainText( text ) {
 
       if ( counter === 1 )
         $workspace.fadeIn()
-
         if( cookie.script_visible === 'false'){
           $('.title-page, .toc-page, .script-page').hide()
         };
@@ -310,7 +323,7 @@ var AnalyseDialogs = function() {
     let character = $(this).children('h4').text().replace(/ *\([^)]*\) */g, "")
     let raw_text = $(this).children('p').text().trim().replace('/\s+/gi', ' ')
     let wordCount = raw_text.split(' ').length;
-    dialogs.push( {'character': character, 'wordCount': wordCount, 'sequence': $(this).data('seqindex'), 'color': $(this).children('h4').css("color"), 'text':  raw_text, 'time':  raw_text.length * 60 * 1000 / char_per_minutes /* needs milliseconds */} )
+    dialogs.push( {'character': character, 'wordCount': wordCount, 'sequence': $(this).data('seqindex'), 'color': $(this).children('h4').css("color"), 'text':  raw_text, 'time':  raw_text.length * 60 * 1000 / cookie.char_per_minutes /* needs milliseconds */} )
   })
 
   return dialogs
@@ -511,7 +524,7 @@ var DrawChartSequence = function( dialogs ) {
 
 function msToHMS( ms ) {
     // 1- Convert to seconds:
-    var seconds = ms / char_per_minutes; // 1000 for english
+    var seconds = ms / cookie.char_per_minutes; // 1000 for english
     // 2- Extract hours:
     //var hours = parseInt( seconds / 3600 ); // 3,600 seconds in 1 hour
     seconds = seconds % 3600; // seconds remaining after extracting hours
