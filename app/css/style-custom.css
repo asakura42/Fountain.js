@@ -113,15 +113,20 @@ body p{
     color: #000080;
 }
 
-#stats-filter {
-	display:flex;
-	justify-content: space-between;
+#filter {
+	max-width: 6em;
 }
 
 #stats-filter {
+	display:flex;
+	justify-content: space-between;
 	font-family: "Lucida Sans Unicode", "sans-serif";
 	margin-bottom: 2em;
 	font-size: 14px;
+}
+
+#characters_per_minutes {
+	line-height: 23px;
 }
 
 .charts {
