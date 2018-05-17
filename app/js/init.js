@@ -143,7 +143,7 @@ var RenderDragAndDrop = function() {
       </section>`
     $(html).insertAfter($workspace)
     $workspace.fadeIn()
-    
+
     $('#file-api').fadeIn()
     var dragOver = function (e) {
       $(this).addClass('over');
@@ -294,11 +294,16 @@ function PrintFountainText( text ) {
         DrawCategoriesChart(dialogs)
       })
 
-      if ( counter === 1 )
+      if ( counter === 1 ) {
         $workspace.fadeIn()
         if( cookie.script_visible === 'false'){
           $('.title-page, .toc-page, .script-page').hide()
         };
+      }
+
+      let anchor = '#' + document.URL.split('#')[1]
+      scrollTo( $( anchor ) )
+
     }
   })
 }
@@ -587,4 +592,11 @@ function getCookie(cname) {
         }
     }
     return "";
+}
+
+// https://wprock.fr/blog/smooth-scrolling-jquery/
+function scrollTo( target ) {
+	if( target.length ) {
+		$("html, body").stop().animate( { scrollTop: target.offset().top - 80}, 400);
+	}
 }

@@ -12,6 +12,7 @@ The result is an intensive mod of the [Fountain.js](http://mattdaly.github.io/Fo
 
 - Table of Contents Page with smooth scrolling links
 - Automatic sequences numbering
+- Support anchor in URL
 
 ### Initialization
 
@@ -36,6 +37,10 @@ The result is an intensive mod of the [Fountain.js](http://mattdaly.github.io/Fo
 - Full width display (optional)
 - Mobile-friendly responsive design
 - Characters color
+
+### Fixes
+
+- Allow all UTF-8 characters in character names (from [Derenix](https://github.com/derenix/Fountain.js/commit/4fc8f3f35c959f25a3e0c184d11a5a0c5b23037b)).
 
 ## Usage
 
@@ -68,7 +73,7 @@ Using the drag and drop feature to parse local .fountain file doesn't allow to l
 ## Dependencies
 
 - [jquery](https://code.jquery.com/)
-- [jquery.smoothscroll.js](http://mths.be/smoothscroll)
+- [smoothscroll.js](http://mths.be/smoothscroll)
 - [normalize.css](https://necolas.github.io/normalize.css/)
 - [fountain.js](https://github.com/mattdaly/Fountain.js)
 - fountain.js [style.css](https://github.com/mattdaly/Fountain.js)
