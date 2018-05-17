@@ -7,7 +7,7 @@ filename = filename.replace('html', 'fountain')
 
 var timemout_run = false
 
-var page = function (html, className) {
+var page = function (html, className, id) {
   var $output = $(document.createElement('div')).addClass('page').html(html)
   if (className) {
     $output.addClass(className)
@@ -17,6 +17,9 @@ var page = function (html, className) {
       $(this).wrap($(document.createElement('div')).addClass('dual-dialogue'))
       dual.prependTo($(this).parent())
     })
+  }
+  if (id) {
+    $output.attr('id', id)
   }
   return $output
 }
@@ -198,7 +201,7 @@ function PrintFountainText( text ) {
 
       // toc
       if ( ! $('.toc-page').length )
-        $script.append(page('<h2>Table des Matières</h2><h3>Sequences</h3><ol id="toc"></ol><h3>Stats</h3><ol id="toc-stats"><li><a href="#stats">Characters</a><li><a href="#stats-sequences">X-Range</a></li></ol>', 'toc-page'))
+        $script.append(page('<h2>Table des Matières</h2><h3>Sequences</h3><ol id="toc"></ol><h3>Stats</h3><ol><li><a href="#page-stats">Characters</a><li><a href="#stats-sequences">X-Range</a></li></ol>', 'toc-page'))
 
       // script
       if ( ! $('.script-page').length ) {
@@ -243,7 +246,7 @@ function PrintFountainText( text ) {
           </div>
           <div id="stats-characters" class="charts"></div>
           <div id="stats-sequences" class="charts"></div>
-          <div id="stats-categories" class="charts"></div>`, 'stats-page')
+          <div id="stats-categories" class="charts"></div>`, 'stats-page', 'page-stats')
         )
     $('#characters_per_minutes').val(cookie.char_per_minutes)
     $('#characters_per_minutes').on('keyup click', function(){
