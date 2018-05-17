@@ -55,8 +55,13 @@ You can access this associated online page [GitHub Page](https://x-raym.github.i
 
 Or Simply upload to the unzipped repo archive in your server.
 
+### Local Files
+
+Using the drag and drop feature to parse local .fountain file doesn't allow to load your custom metadata from a `characters.json`.
+
 ## Todos
 
+- Add Input from URL to prevent local files usage limiation
 - Add descriptions in the X-Range graph.
 - Change icons
 

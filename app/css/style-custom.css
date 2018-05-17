@@ -181,6 +181,10 @@ body.dark-theme {
 	/*box-shadow: 10px 0px 10px 0px rgba(0,0,0,0.5);*/
 }
 
+#fountain-js #workspace #script .title-page h1 {
+	font-weight:bold;
+}
+
 /*
 p:before {
 	font-family: 'fontello';

@@ -1,6 +1,7 @@
 // Get HTML File Name
-let url = window.location.pathname
-let filename = url.substring(url.lastIndexOf('/') + 1)
+var url = window.location.pathname
+var filename = url.substring(url.lastIndexOf('/') + 1)
+
 // Get Foutain Name
 filename = filename.replace('html', 'fountain')
 
@@ -22,17 +23,6 @@ var page = function (html, className) {
 
 $('#fountain-js').prepend(`<section id="workspace">
       <header class="toolbar">
-        <div class="container">
-          <ul id="inspector">
-            <li></li>
-          </ul>
-
-          <p id="script-title"></p>
-
-          <ul id="toolbar">
-          </ul>
-
-        </div>
       </header>
       <div id="script"></div>
     </section>`)
@@ -56,17 +46,25 @@ var characters = {}
 
 var refresh
 $(document).ready(function(){
-  ParseCharacters()
   AddToolbarButtons()
-  ParserAndPrint()
-  refresh = setInterval(ParserAndPrint, 1000)
+  if (filename.substr(filename.length - 8) === "fountain") { // If has be init form /app/ url
+    ParseCharacters()
+    ParserAndPrint()
+    refresh = setInterval(ParserAndPrint, 1000)
+  } else {
+    RenderDragAndDrop()
+  }
 })
 
 function ParseCharacters() {
   fetch('json/characters.json')
     .then(response => response.text())
     .then(function(text) {
-      characters = JSON.parse(text)
+     if( text ) {
+        characters = JSON.parse(text)
+      }
+  }).catch(function(error){
+    // console.log("No characters.json detected", error)
   })
 }
 
@@ -78,7 +76,7 @@ function AddToolbarButtons() {
     <li></li>
     </ul>
 
-    <p id="script-title"></p>
+    <p id="script-title">Responsive Fountain Screenplay with Dialog Analyses</p>
 
     <ul id="toolbar">
       <li class="resize"><a data-tooltip="Resize Script">Resize Script</a></li>
@@ -88,7 +86,8 @@ function AddToolbarButtons() {
   </div>
   `
   toolbar_header.html(content)
-    let $toolbar    = $(document.getElementById('toolbar'))
+  let $toolbar    = $(document.getElementById('toolbar'))
+  //$('#script-title').html( document.title )
   $title      = $(document.getElementById('script-title'))
 
   $toolbar.find('.resize').on('click', function () {
@@ -119,11 +118,21 @@ cookie.char_per_minutes = getCookie("characters_per_minutes") ? getCookie("chara
 var ParserAndPrint = function () {
   counter++
   fetch(filename)
-  .then(response => response.text())
+  .then(function(response){
+    if (response.status !== 404) {
+      // console.log('response', response)
+      return response.text()
+    }
+  })
   .then(text =>
     PrintFountainText( text )
   ).catch(function(error) {
-    clearTimeout(refresh)
+    RenderDragAndDrop()
+  });
+};
+
+var RenderDragAndDrop = function() {
+  clearTimeout(refresh)
     let html = `
       <section id="dock">
         <div class="container">
@@ -134,42 +143,42 @@ var ParserAndPrint = function () {
       </section>`
     $(html).insertAfter($workspace)
     $workspace.fadeIn()
+    
     $('#file-api').fadeIn()
     var dragOver = function (e) {
-    $(this).addClass('over');
-    e.stopPropagation();
-    e.preventDefault();
-  };
-
-  var dragLeave = function (e) {
-      $(this).removeClass('over');
+      $(this).addClass('over');
       e.stopPropagation();
       e.preventDefault();
-  };
+    };
 
-  var loadScript = function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    e = e.originalEvent;
+    var dragLeave = function (e) {
+        $(this).removeClass('over');
+        e.stopPropagation();
+        e.preventDefault();
+    };
 
-    $(this).removeClass('over');
+    var loadScript = function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      e = e.originalEvent;
 
-    var file   = e.dataTransfer.files[0]
-      , reader = new FileReader();
+      $(this).removeClass('over');
 
-    if (file) {
-      reader.onload = function(evt) {
-        $('#file-api').hide()
+      var file   = e.dataTransfer.files[0]
+        , reader = new FileReader();
 
-          PrintFountainText(evt.target.result)
+      if (file) {
+        reader.onload = function(evt) {
+          $('#file-api').hide()
 
+            PrintFountainText(evt.target.result)
+
+        }
+
+        reader.readAsText(file);
       }
-
-      reader.readAsText(file);
-    }
-  };
-	 $(document.getElementById('file-api')).fadeIn().on('dragleave', dragLeave).on('dragover', dragOver).on('drop', loadScript);
-})
+    };
+    $(document.getElementById('file-api')).fadeIn().on('dragleave', dragLeave).on('dragover', dragOver).on('drop', loadScript);
 }
 
 function PrintFountainText( text ) {
@@ -227,29 +236,29 @@ function PrintFountainText( text ) {
                 <option value="time" selected>Time</option>
              </select>
              </div>
-			 <div class="filter-field filter-characters-er-minutes">
-             	<label for="unit">Characters per Minutes: </label>
-             	<input type="number" min="1" max="9999" id="characters_per_minutes" value="1300" maxlength="4" size="1">
+       <div class="filter-field filter-characters-er-minutes">
+               <label for="unit">Characters per Minutes: </label>
+               <input type="number" min="1" max="9999" id="characters_per_minutes" value="1300" maxlength="4" size="1">
              </div>
           </div>
           <div id="stats-characters" class="charts"></div>
           <div id="stats-sequences" class="charts"></div>
           <div id="stats-categories" class="charts"></div>`, 'stats-page')
         )
-	  $('#characters_per_minutes').val(cookie.char_per_minutes)
-	  $('#characters_per_minutes').on('keyup click', function(){
-		  let val = $(this).val()
-		  if (val.length > 4) {
-			val = val.slice(0,4)
-			$(this).val( val );
-		  }
-		  cookie.char_per_minutes = val
-		  setCookie("characters_per_minutes", val )
-		  var dialogs = AnalyseDialogs()
-		  chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
-		  chartSeq = DrawChartSequence(FilterDialogs(dialogs))
-		  DrawCategoriesChart(dialogs)
-	  })
+    $('#characters_per_minutes').val(cookie.char_per_minutes)
+    $('#characters_per_minutes').on('keyup click', function(){
+      let val = $(this).val()
+      if (val.length > 4) {
+      val = val.slice(0,4)
+      $(this).val( val );
+      }
+      cookie.char_per_minutes = val
+      setCookie("characters_per_minutes", val )
+      var dialogs = AnalyseDialogs()
+      chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
+      chartSeq = DrawChartSequence(FilterDialogs(dialogs))
+      DrawCategoriesChart(dialogs)
+    })
       var filterElm = $('#filter')
       let sequence_init_val = filterElm.val()
       filterElm.html('<option value="0" selected>All</option>')
@@ -261,7 +270,7 @@ function PrintFountainText( text ) {
 
       $('.dialogue').each(function(){
         let character = $(this).children('h4').text().replace(' (SUITE)', '' ).toLowerCase()
-        let color = characters.characters[character] !== undefined && characters.characters[character].color !== undefined ? characters.characters[character].color : "#7d7d7d"
+        let color = characters.characters && characters.characters[character] !== undefined && characters.characters[character].color !== undefined ? characters.characters[character].color : "#7d7d7d"
         $(this).children('h4').css('color', color)
         $(this).addClass(character) // Add character name as class of character dialog titles
         $(this).html(($(this).html()).replace(/(\w)( )([!\?:;%»]|&raquo;)/, '$1&nbsp;$3')) // Add non-breaking space for French
