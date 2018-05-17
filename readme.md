@@ -1,11 +1,10 @@
 # Responsive Fountain Screenplay with Dialog Analyses
-===========
 
 This webapp aims to provide advanced statistics for your Screenplay written in fountain syntax.
 
 This project started as a fork of the **sbddesign**'s [Fountain.js mod](https://github.com/sbddesign/Fountain.js) who added location reports and make few code fixes. He based his work on the original **mattdaly**'s [Fountain.js](https://github.com/mattdaly/Fountain.js) parser.  In the end, I removed location reports for now and some files, to make it answers my own personal needs.
 
-The result is an  intensive mod of the [Fountain.js](http://mattdaly.github.io/Fountain.js/) app demo, with tons of new features.
+The result is an intensive mod of the [Fountain.js](http://mattdaly.github.io/Fountain.js/) app demo, with tons of new features.
 
 ## Features
 
@@ -52,7 +51,9 @@ The auto-load feature based on `.html` file name only works in [FireFox](https:/
 
 ### Online Usage
 
-Simply upload to the unzipped repo archive in your server.
+You can access this associated online page [GitHub Page](https://x-raym.github.io/Fountain.js/app/) to access the drag and drop file version of this app.
+
+Or Simply upload to the unzipped repo archive in your server.
 
 ## Todos
 
