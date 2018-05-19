@@ -2,6 +2,15 @@
 
 This webapp aims to provide advanced statistics for your Screenplay written in fountain syntax.
 
+# Links
+
+- [Online WebApp](https://x-raym.github.io/Fountain.js/), for testing the app online.
+- [Zip Download](https://github.com/X-Raym/Fountain.js/archive/master.zip), for local usage with all the fancy features.
+- [GitHub Repo](https://github.com/X-Raym/Fountain.js), for contributing.
+- [Demos](https://x-raym.github.io/Fountain.js/samples/), for displaying some already prepared screenplays directly.
+
+# Introduction
+
 This project started as a fork of the **sbddesign**'s [Fountain.js mod](https://github.com/sbddesign/Fountain.js) who added location reports and make few code fixes. He based his work on the original **mattdaly**'s [Fountain.js](https://github.com/mattdaly/Fountain.js) parser.  In the end, I removed location reports for now and some files, to make it answers my own personal needs.
 
 The result is an intensive mod of the [Fountain.js](http://mattdaly.github.io/Fountain.js/) app demo, with tons of new features.
@@ -37,6 +46,8 @@ The result is an intensive mod of the [Fountain.js](http://mattdaly.github.io/Fo
 - Full width display (optional)
 - Mobile-friendly responsive design
 - Characters color
+- French non-breaking spaces before strong punctuations
+- No favicon
 
 ### Fixes
 
@@ -64,11 +75,20 @@ Or Simply upload to the unzipped repo archive in your server.
 
 Using the drag and drop feature to parse local .fountain file doesn't allow to load your custom metadata from a `characters.json`.
 
+### Samples
+
+The repo have a set of screenplays ready for testing. Just open the dedicated .html pages in your browser.
+
+Samples included:
+
+- Brick & Steel
+- Big Fish
+
 ## Todos
 
-- Add Input from URL to prevent local files usage limiation
-- Add descriptions in the X-Range graph.
 - Change icons
+- Add Input from URL to prevent local files usage limitation for assets loading
+- Add descriptions in the X-Range graph.
 
 ## Dependencies
 
