@@ -48,6 +48,8 @@ The result is an intensive mod of the [Fountain.js](http://mattdaly.github.io/Fo
 - Characters color
 - French non-breaking spaces before strong punctuations
 - No favicon
+- Colored italic text background
+- SVG icons for toolbar, directly emebed as HTML from JavaScript (less server request, more customization possible)
 
 ### Fixes
 
@@ -86,9 +88,9 @@ Samples included:
 
 ## Todos
 
-- Change icons
 - Add Input from URL to prevent local files usage limitation for assets loading
 - Add descriptions in the X-Range graph.
+- Add tooltip for the toolbar
 
 ## Dependencies
 
@@ -99,3 +101,7 @@ Samples included:
 - fountain.js [style.css](https://github.com/mattdaly/Fountain.js)
 - [highcharts.js](https://www.highcharts.com/)
 - highcharts [xrange.js](http://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/demo/x-range/)
+
+## External Resources
+
+Icons have been downloaded from [https://fontawesome.com/](https://fontawesome.com/).

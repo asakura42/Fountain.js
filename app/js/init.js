@@ -81,19 +81,36 @@ function AddToolbarButtons() {
 
     <p id="script-title">Responsive Fountain Screenplay with Dialog Analyses</p>
 
-    <ul id="toolbar">
-      <li class="resize"><a data-tooltip="Resize Script">Resize Script</a></li>
-      <li class="dim"><a data-tooltip="Toggle Theme">Toggle Theme</a></li>
-      <li class="dock"><a data-tooltip="Full Width">Full Width</a></li>
-    </ul>
-  </div>
+
+
+	<ul id="toolbar">
+	  <li id="button-resize">
+	    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+	      <path d="M500 384c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H12c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v308h436zm-308-44v-72c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v72c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0V204c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v136c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 0V140c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v200c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0V108c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v232c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12z"/>
+	    </svg>
+	    <span>Resize Script</span>
+	  </li>
+	  <li id="button-theme">
+	    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+	      <path d="M274.835 12.646l25.516 62.393c4.213 10.301 16.671 14.349 26.134 8.492l57.316-35.479c15.49-9.588 34.808 4.447 30.475 22.142l-16.03 65.475c-2.647 10.81 5.053 21.408 16.152 22.231l67.224 4.987c18.167 1.348 25.546 24.057 11.641 35.826L441.81 242.26c-8.495 7.19-8.495 20.289 0 27.479l51.454 43.548c13.906 11.769 6.527 34.478-11.641 35.826l-67.224 4.987c-11.099.823-18.799 11.421-16.152 22.231l16.03 65.475c4.332 17.695-14.986 31.73-30.475 22.142l-57.316-35.479c-9.463-5.858-21.922-1.81-26.134 8.492l-25.516 62.393c-6.896 16.862-30.774 16.862-37.67 0l-25.516-62.393c-4.213-10.301-16.671-14.349-26.134-8.492l-57.317 35.479c-15.49 9.588-34.808-4.447-30.475-22.142l16.03-65.475c2.647-10.81-5.053-21.408-16.152-22.231l-67.224-4.987c-18.167-1.348-25.546-24.057-11.641-35.826L70.19 269.74c8.495-7.19 8.495-20.289 0-27.479l-51.454-43.548c-13.906-11.769-6.527-34.478 11.641-35.826l67.224-4.987c11.099-.823 18.799-11.421 16.152-22.231l-16.03-65.475c-4.332-17.695 14.986-31.73 30.475-22.142l57.317 35.479c9.463 5.858 21.921 1.81 26.134-8.492l25.516-62.393c6.896-16.861 30.774-16.861 37.67 0zM392 256c0-74.991-61.01-136-136-136-74.991 0-136 61.009-136 136s61.009 136 136 136c74.99 0 136-61.009 136-136zm-32 0c0 57.346-46.654 104-104 104s-104-46.654-104-104 46.654-104 104-104 104 46.654 104 104z"/>
+	    </svg>
+	    <span>Toggle Theme</span>
+	  </li>
+	  <li id="button-fullwidth">
+	    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+	      <path d="M377.941 169.941V216H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.568 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296h243.882v46.059c0 21.382 25.851 32.09 40.971 16.971l86.059-86.059c9.373-9.373 9.373-24.568 0-33.941l-86.059-86.059c-15.119-15.12-40.971-4.412-40.971 16.97z"/>
+	    </svg>
+	    <span>Full Width</span>
+	  </li>
+	</ul>
+	</div>
   `
   toolbar_header.html(content)
   let $toolbar    = $(document.getElementById('toolbar'))
   //$('#script-title').html( document.title )
   $title      = $(document.getElementById('script-title'))
 
-  $toolbar.find('.resize').on('click', function () {
+  $toolbar.find('#button-resize').on('click', function () {
     $('.title-page, .toc-page, .script-page').fadeToggle(400, function(){
       let val = cookie.script_visible === 'false'? 'true' : 'false';
        setCookie("script_visible", val );
@@ -102,14 +119,14 @@ function AddToolbarButtons() {
 
   cookie.dark_theme = getCookie("dark_theme");
   if( cookie.dark_theme === 'true') $body.addClass('dark-theme')
-  $toolbar.find('.dim').on('click', function () {
+  $toolbar.find('#button-theme').on('click', function () {
     $body.toggleClass('dark-theme')
     setCookie("dark_theme", $body.hasClass('dark-theme') );
   });
 
   cookie.full_width = getCookie("full_width");
   if( cookie.full_width === 'true') $script.addClass('full_width')
-  $toolbar.find('.dock').on('click', function () {
+  $toolbar.find('#button-fullwidth').on('click', function () {
     $script.toggleClass('full_width')
     window.dispatchEvent(new Event('resize'))
     setCookie("full_width", $script.hasClass('full_width') )
