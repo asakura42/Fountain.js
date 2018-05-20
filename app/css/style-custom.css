@@ -192,3 +192,25 @@ svg {
 #toolbar span {
 	display:none;
 }
+
+/* Tooltip text */
+/* https://www.w3schools.com/css/css_tooltip.asp */
+#toolbar li span {
+	visibility: hidden;
+	width: auto;
+	white-space:  nowrap;
+	background-color: #ED303C;
+	color: #fff;
+	text-align: center;
+	padding: 5px 5px;
+	border-radius: 4px;
+	position: absolute;
+	top: 28px;
+	left: calc(100% - 50px);
+	z-index: 1;
+}
+
+#toolbar li:hover span {
+	visibility: visible;
+}
+
