@@ -83,27 +83,27 @@ function AddToolbarButtons() {
 
 
 
-	<ul id="toolbar">
-	  <li id="button-resize">
-	    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-	      <path d="M500 384c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H12c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v308h436zm-308-44v-72c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v72c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0V204c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v136c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 0V140c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v200c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0V108c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v232c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12z"/>
-	    </svg>
-	    <span>Resize Script</span>
-	  </li>
-	  <li id="button-theme">
-	    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-	      <path d="M274.835 12.646l25.516 62.393c4.213 10.301 16.671 14.349 26.134 8.492l57.316-35.479c15.49-9.588 34.808 4.447 30.475 22.142l-16.03 65.475c-2.647 10.81 5.053 21.408 16.152 22.231l67.224 4.987c18.167 1.348 25.546 24.057 11.641 35.826L441.81 242.26c-8.495 7.19-8.495 20.289 0 27.479l51.454 43.548c13.906 11.769 6.527 34.478-11.641 35.826l-67.224 4.987c-11.099.823-18.799 11.421-16.152 22.231l16.03 65.475c4.332 17.695-14.986 31.73-30.475 22.142l-57.316-35.479c-9.463-5.858-21.922-1.81-26.134 8.492l-25.516 62.393c-6.896 16.862-30.774 16.862-37.67 0l-25.516-62.393c-4.213-10.301-16.671-14.349-26.134-8.492l-57.317 35.479c-15.49 9.588-34.808-4.447-30.475-22.142l16.03-65.475c2.647-10.81-5.053-21.408-16.152-22.231l-67.224-4.987c-18.167-1.348-25.546-24.057-11.641-35.826L70.19 269.74c8.495-7.19 8.495-20.289 0-27.479l-51.454-43.548c-13.906-11.769-6.527-34.478 11.641-35.826l67.224-4.987c11.099-.823 18.799-11.421 16.152-22.231l-16.03-65.475c-4.332-17.695 14.986-31.73 30.475-22.142l57.317 35.479c9.463 5.858 21.921 1.81 26.134-8.492l25.516-62.393c6.896-16.861 30.774-16.861 37.67 0zM392 256c0-74.991-61.01-136-136-136-74.991 0-136 61.009-136 136s61.009 136 136 136c74.99 0 136-61.009 136-136zm-32 0c0 57.346-46.654 104-104 104s-104-46.654-104-104 46.654-104 104-104 104 46.654 104 104z"/>
-	    </svg>
-	    <span>Toggle Theme</span>
-	  </li>
-	  <li id="button-fullwidth">
-	    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-	      <path d="M377.941 169.941V216H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.568 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296h243.882v46.059c0 21.382 25.851 32.09 40.971 16.971l86.059-86.059c9.373-9.373 9.373-24.568 0-33.941l-86.059-86.059c-15.119-15.12-40.971-4.412-40.971 16.97z"/>
-	    </svg>
-	    <span>Full Width</span>
-	  </li>
-	</ul>
-	</div>
+  <ul id="toolbar">
+    <li id="button-resize">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <path d="M500 384c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H12c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v308h436zm-308-44v-72c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v72c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0V204c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v136c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 0V140c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v200c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0V108c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v232c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12z"/>
+      </svg>
+      <span>Resize Script</span>
+    </li>
+    <li id="button-theme">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <path d="M274.835 12.646l25.516 62.393c4.213 10.301 16.671 14.349 26.134 8.492l57.316-35.479c15.49-9.588 34.808 4.447 30.475 22.142l-16.03 65.475c-2.647 10.81 5.053 21.408 16.152 22.231l67.224 4.987c18.167 1.348 25.546 24.057 11.641 35.826L441.81 242.26c-8.495 7.19-8.495 20.289 0 27.479l51.454 43.548c13.906 11.769 6.527 34.478-11.641 35.826l-67.224 4.987c-11.099.823-18.799 11.421-16.152 22.231l16.03 65.475c4.332 17.695-14.986 31.73-30.475 22.142l-57.316-35.479c-9.463-5.858-21.922-1.81-26.134 8.492l-25.516 62.393c-6.896 16.862-30.774 16.862-37.67 0l-25.516-62.393c-4.213-10.301-16.671-14.349-26.134-8.492l-57.317 35.479c-15.49 9.588-34.808-4.447-30.475-22.142l16.03-65.475c2.647-10.81-5.053-21.408-16.152-22.231l-67.224-4.987c-18.167-1.348-25.546-24.057-11.641-35.826L70.19 269.74c8.495-7.19 8.495-20.289 0-27.479l-51.454-43.548c-13.906-11.769-6.527-34.478 11.641-35.826l67.224-4.987c11.099-.823 18.799-11.421 16.152-22.231l-16.03-65.475c-4.332-17.695 14.986-31.73 30.475-22.142l57.317 35.479c9.463 5.858 21.921 1.81 26.134-8.492l25.516-62.393c6.896-16.861 30.774-16.861 37.67 0zM392 256c0-74.991-61.01-136-136-136-74.991 0-136 61.009-136 136s61.009 136 136 136c74.99 0 136-61.009 136-136zm-32 0c0 57.346-46.654 104-104 104s-104-46.654-104-104 46.654-104 104-104 104 46.654 104 104z"/>
+      </svg>
+      <span>Toggle Theme</span>
+    </li>
+    <li id="button-fullwidth">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <path d="M377.941 169.941V216H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.568 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296h243.882v46.059c0 21.382 25.851 32.09 40.971 16.971l86.059-86.059c9.373-9.373 9.373-24.568 0-33.941l-86.059-86.059c-15.119-15.12-40.971-4.412-40.971 16.97z"/>
+      </svg>
+      <span>Full Width</span>
+    </li>
+  </ul>
+  </div>
   `
   toolbar_header.html(content)
   let $toolbar    = $(document.getElementById('toolbar'))
@@ -329,8 +329,8 @@ function PrintFountainText( text ) {
 }
 
 var SumDialogs = function( dialogs ) {
-  var charactersStats = []
-  var charactersColor = []
+  var charactersStats = {}
+  var charactersColor = {}
 
   var unit = $('#unit').val()
 
@@ -388,15 +388,17 @@ function DrawCategoriesChart(dialogs) {
     if($("#" + id).length == 0) {
       $('#stats-categories').append( '<div id="' + id +'" class="charts"></div>' )
     }
-    var chart_catergories = DrawChart(dialog_categories, id, cat)
+    var chart_catergories = DrawChart(dialog_categories, id, cat, true)
   }
 }
 
 function SumDialogStatsCategories( stats_in, characters, cat ) {
-  let stats_out = {stats: [], colors:[]}
+  stats_in.stats = sortPropertiesByValue(stats_in.stats)
+  let stats_out = {stats: {}, colors:{}}
   stats_out.stats["undefined"] = 0
   stats_out.colors["undefined"] = "#7d7d7d"
-  stats_in.group = []
+  // Old code which need to be cleaned
+  stats_in.group = {}
   Object.keys(characters.categories[cat]).forEach(function(val){
     stats_out.stats[val] = 0
     stats_out.colors[val] = characters.categories[cat][val].color
@@ -411,6 +413,26 @@ function SumDialogStatsCategories( stats_in, characters, cat ) {
       stats_out.stats[stats_in.group["undefined"]] = stats_out.stats[stats_in.group["undefined"]] + stats_in.stats[k_character]
     }
   }
+  // End of old code
+  stats_out.stats = []
+  for (let k_character in stats_in.stats) {
+    let array = {}
+    array["name"] = k_character
+    array["data"] = []
+    let set = false
+    Object.keys(characters.categories[cat]).forEach(function(val){
+      value = 0
+      if( characters.categories[cat][val].series.includes(k_character.toLowerCase()) ) {
+        value = stats_in.stats[k_character]
+        set = true
+      }
+      array["data"].push( value )
+    })
+    if ( set === false ) { array["data"].unshift( stats_in.stats[k_character] ) } else { array["data"].unshift( 0 ) }
+    array["color"] = stats_in.colors[k_character]
+    // If not set, then add value to the undefined cat name, else, add 0 to the undefined cat name
+    stats_out.stats.push(array)
+  }
   if ( stats_out.stats["undefined"] === 0 ) {
     delete stats_out.stats["undefined"]
     delete stats_out.colors["undefined"]
@@ -418,7 +440,44 @@ function SumDialogStatsCategories( stats_in, characters, cat ) {
   return stats_out
 }
 
-var DrawChart = function( series, id, title ) {
+function sortPropertiesByValue(obj) {
+  obj = sortProperties(obj)
+  var arr = {}
+  for( let key in obj ) {
+    arr[key] = obj[key]
+  }
+  var arr2 = {}
+  for( let key in arr ) {
+    arr2[obj[key][0]] = obj[key][1]
+  }
+  return arr2
+}
+
+function sortProperties(obj) {
+  // convert object into array
+  var sortable=[]
+  for(var key in obj)
+    if(obj.hasOwnProperty(key))
+      sortable.push([key, obj[key]]) // each item is an array in format [key, value]
+
+  // sort items by value
+  sortable.sort(function(a, b) {
+    return a[1]-b[1] // compare numbers
+  })
+  return sortable // array in format [ [ key1, val1 ], [ key2, val2 ], ... ]
+}
+
+var DrawChart = function( series, id, title, is_category ) {
+  let array, stacking, colorByPoint
+  if ( is_category ) {
+    array = series.stats
+    stacking = 'normal'
+    console.log(series)
+  } else {
+    array = [{data:Object.values(series.stats)}]
+    stacking = null
+    colorByPoint = true
+  }
   if ( id === undefined ) id = 'stats-characters'
   if ( title === undefined ) title = 'characters'
   var unit = $('#unit').val()
@@ -456,7 +515,16 @@ var DrawChart = function( series, id, title ) {
           },
           labels: {
               overflow: 'justify'
-          }
+          },
+          stackLabels: {
+            enabled: is_category,
+            formatter: function() {
+              return unit === 'time' ? msToHMS(this.total)
+                      :               this.total
+            },
+            y: 30,
+            align: 'left'
+        }
       },
       legend: {
         enabled: false
@@ -466,28 +534,45 @@ var DrawChart = function( series, id, title ) {
               dataLabels: {
                   enabled: true
               },
-              colorByPoint : true,
-              colors: Object.values(series.colors)
+              colorByPoint : colorByPoint,
+              colors: Object.values(series.colors),
+              borderWidth: 0
           },
           series: {
             dataLabels: {
               formatter: function() {
-                let val = unit === 'time' ? msToHMS(this.y) : this.y
-                return val
+                name = this.y > 0 ? this.series.name : ''
+                return is_category ? name
+                        : unit === 'time' ? msToHMS(this.y)
+                        :               this.y
               }
             },
             animation: {
               duration: false
-            }
+            },
+            stacking: 'normal'
           }
       },
       credits: {
           enabled: false
       },
       tooltip: {
-        enabled: false
+        formatter: function () {
+          let val = unit === 'time' ? msToHMS(this.y) : this.y
+          let str = ''
+          if ( is_category ) {
+            str = '<strong>' + this.series.name + '</strong><br>' + val + '<br>' + Math.round(this.percentage) + '% of ' + this.key
+          } else {
+            let total = 0
+            this.series.data.forEach(function(obj){
+              total += obj.y
+            })
+            str = Math.round(this.y / total * 100 ) + '% of total'
+          }
+          return str
+        }
       },
-      series: [{data:Object.values(series.stats)}]
+      series: array
   })
   return chart
 }
@@ -616,7 +701,7 @@ function getCookie(cname) {
 
 // https://wprock.fr/blog/smooth-scrolling-jquery/
 function scrollTo( target ) {
-	if( target.length ) {
-		$("html, body").stop().animate( { scrollTop: target.offset().top - 80}, 400);
-	}
+  if( target.length ) {
+    $("html, body").stop().animate( { scrollTop: target.offset().top - 80}, 400);
+  }
 }
