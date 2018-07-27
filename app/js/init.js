@@ -202,6 +202,8 @@ var RenderDragAndDrop = function() {
 }
 
 function PrintFountainText( text ) {
+	// Process text
+  text = text.replace(/(\w)( )([!\?:;%»]|&raquo;)/gmi, '$1 $3') // Add French non breaking space
 
   fountain.parse(text, true, function (result) {
     if (result && text !== prev_text) {
@@ -214,7 +216,7 @@ function PrintFountainText( text ) {
 
       document.title = result.title
 
-    $('#doc').hide()
+      $('#doc').hide()
 
       // toc
       if ( ! $('.toc-page').length )
@@ -293,7 +295,6 @@ function PrintFountainText( text ) {
         let color = characters.characters && characters.characters[character] !== undefined && characters.characters[character].color !== undefined ? characters.characters[character].color : "#7d7d7d"
         $(this).children('h4').css('color', color)
         $(this).addClass(character) // Add character name as class of character dialog titles
-        $(this).html(($(this).html()).replace(/(\w)( )([!\?:;%»]|&raquo;)/, '$1&nbsp;$3')) // Add non-breaking space for French
       })
 
       $('.dialogue').each(function(){
@@ -472,7 +473,6 @@ var DrawChart = function( series, id, title, is_category ) {
   if ( is_category ) {
     array = series.stats
     stacking = 'normal'
-    console.log(series)
   } else {
     array = [{data:Object.values(series.stats)}]
     stacking = null
