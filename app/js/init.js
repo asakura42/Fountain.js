@@ -52,8 +52,6 @@ $(document).ready(function(){
   AddToolbarButtons()
   if (filename.substr(filename.length - 8) === "fountain") { // If has be init form /app/ url
     ParseCharacters()
-    ParserAndPrint()
-    refresh = setInterval(ParserAndPrint, 1000)
   } else {
     RenderDragAndDrop()
   }
@@ -66,7 +64,10 @@ function ParseCharacters() {
      if( text ) {
         characters = JSON.parse(text)
       }
-  }).catch(function(error){
+  }).then(function(){
+      ParserAndPrint()
+      refresh = setInterval(ParserAndPrint, 1000)
+    }).catch(function(error){
     // console.log("No characters.json detected", error)
   })
 }
