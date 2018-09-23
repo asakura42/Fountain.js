@@ -169,7 +169,7 @@ body.dark-theme {
 	/*box-shadow: 10px 0px 10px 0px rgba(0,0,0,0.5);*/
 }
 
-#fountain-js #workspace #script .title-page h1 {
+#fountain-js #workspace #script .title-page h1, .clicked {
 	font-weight:bold;
 }
 
@@ -214,3 +214,6 @@ svg {
 	visibility: visible;
 }
 
+#fountain-js #workspace #script .dialogue .clicked {
+	font-weight:bold;
+}

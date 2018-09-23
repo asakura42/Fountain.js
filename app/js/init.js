@@ -326,6 +326,12 @@ function PrintFountainText( text ) {
       let anchor = '#' + document.URL.split('#')[1]
       scrollTo( $( anchor ) )
 
+      $('.dialogue p').on('click', function () {
+        $(this).toggleClass('clicked')
+        copyToClipboard( $(this).text() )
+      });
+
+
     }
   })
 }
@@ -706,3 +712,13 @@ function scrollTo( target ) {
     $("html, body").stop().animate( { scrollTop: target.offset().top - 80}, 400);
   }
 }
+
+function copyToClipboard( str ) {
+    const el = document.createElement('textarea');
+    el.value = str;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    return str;
+};
