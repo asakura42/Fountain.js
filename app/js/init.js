@@ -739,13 +739,14 @@ function DialogsToCSV( dialogs ) {
   let start_time = 0
   dialogs.forEach(function(entry, i){
     line = []
-    line[0] = 'R' + i
-    line[1] = '"' + entry.text + '"'
-    line[2] = start_time // start
-    end_time = start_time + entry.time / 1000
-    line[3] = end_time // end
-    line[4] = entry.time / 1000 // length
-    line[5] = rgb2hex(entry.color) // length
+    line[0] = 'R' + ( i + 1 )
+    line[1] = '"' + entry.text.replace('"','""') + '"'
+    line[2] = start_time.toFixed(3) // start
+    let time = Math.round( entry.time ) / 1000
+    end_time = start_time + time
+    line[3] = end_time.toFixed(3) // end
+    line[4] = time.toFixed(3) // length
+    line[5] = rgb2hex(entry.color).toUpperCase() // length
     csv.push(line.join())
     start_time = end_time
   })
@@ -764,7 +765,7 @@ function rgb2hex(rgb) {
 // Download - https://stackoverflow.com/questions/17564103/using-javascript-to-download-file-as-a-csv-file
 function downloadCSV( csv ) {
   var downloadLink = document.createElement("a")
-  var blob = new Blob(["\ufeff", csv])
+  var blob = new Blob([csv]) // Without BOM version
   var url = URL.createObjectURL(blob)
   downloadLink.href = url
   downloadLink.download = document.title + ".csv"
