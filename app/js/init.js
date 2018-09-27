@@ -308,12 +308,22 @@ function PrintFountainText( text ) {
       var chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
       var chartSeq = DrawChartSequence(FilterDialogs(dialogs))
 
+      $('#stats-sequences').after('<button id="export-csv">REAPER CSV Export</button>')
+
       DrawCategoriesChart(dialogs)
 
       $('#filter, #unit').change(function(){
         chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
         chartSeq = DrawChartSequence(FilterDialogs(dialogs))
+        $('#stats-sequences').after('<button id="export-csv">REAPER CSV Export</button>')
         DrawCategoriesChart(dialogs)
+      })
+
+      $button_export_csv = $(document.getElementById('export-csv'))
+      $button_export_csv.on('click', function () {
+        dialogs = AnalyseDialogs()
+        let csv = DialogsToCSV(dialogs)
+        downloadCSV( csv )
       })
 
       if ( counter === 1 ) {
@@ -722,3 +732,44 @@ function copyToClipboard( str ) {
     document.body.removeChild(el);
     return str;
 };
+
+function DialogsToCSV( dialogs ) {
+  let csv = []
+  csv[0] = ['#,Name,Start,End,Length,Color'] // Header
+  let start_time = 0
+  dialogs.forEach(function(entry, i){
+    line = []
+    line[0] = 'R' + i
+    line[1] = '"' + entry.text + '"'
+    line[2] = start_time // start
+    end_time = start_time + entry.time / 1000
+    line[3] = end_time // end
+    line[4] = entry.time / 1000 // length
+    line[5] = rgb2hex(entry.color) // length
+    csv.push(line.join())
+    start_time = end_time
+  })
+  return csv.join('\n')
+}
+
+// https://stackoverflow.com/questions/1740700/how-to-get-hex-color-value-rather-than-rgb-value
+function rgb2hex(rgb) {
+  rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/)
+  function hex(x) {
+      return ("0" + parseInt(x).toString(16)).slice(-2)
+  }
+  return hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3])
+}
+
+// Download - https://stackoverflow.com/questions/17564103/using-javascript-to-download-file-as-a-csv-file
+function downloadCSV( csv ) {
+  var downloadLink = document.createElement("a")
+  var blob = new Blob(["\ufeff", csv])
+  var url = URL.createObjectURL(blob)
+  downloadLink.href = url
+  downloadLink.download = document.title + ".csv"
+
+  document.body.appendChild(downloadLink)
+  downloadLink.click()
+  document.body.removeChild(downloadLink)
+}
