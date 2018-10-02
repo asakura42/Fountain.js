@@ -308,21 +308,27 @@ function PrintFountainText( text ) {
       var chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
       var chartSeq = DrawChartSequence(FilterDialogs(dialogs))
 
-      $('#stats-sequences').after('<button id="export-csv">REAPER CSV Export</button>')
+      $('#stats-sequences').after('<button class="export-csv" id="export-csv">CSV Export</button>')
+      $('#stats-sequences').after('<button class="export-csv" id="export-csv-reaper">REAPER CSV Export</button>')
 
       DrawCategoriesChart(dialogs)
 
       $('#filter, #unit').change(function(){
         chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
         chartSeq = DrawChartSequence(FilterDialogs(dialogs))
-        $('#stats-sequences').after('<button id="export-csv">REAPER CSV Export</button>')
+        $('#stats-sequences').after('<button class="export-csv" id="export-csv">CSV Export</button>')
+        $('#stats-sequences').after('<button class="export-csv" id="export-csv-reaper">REAPER CSV Export</button>')
         DrawCategoriesChart(dialogs)
       })
 
-      $button_export_csv = $(document.getElementById('export-csv'))
-      $button_export_csv.on('click', function () {
+      $('.export-csv').on('click', function () {
         dialogs = AnalyseDialogs()
-        let csv = DialogsToCSV(dialogs)
+        var csv = ''
+        if( $(this).attr('id') === 'export-csv' ) {
+          csv = DialogsToCSV(dialogs)
+        } else {
+          csv = DialogsToReaperCSV(dialogs)
+        }
         downloadCSV( csv )
       })
 
@@ -735,12 +741,32 @@ function copyToClipboard( str ) {
 
 function DialogsToCSV( dialogs ) {
   let csv = []
+  csv[0] = ['#\tName\tStart\tEnd\tLength\tColor'] // Header
+  let start_time = 0
+  dialogs.forEach(function(entry, i){
+    line = []
+    line[0] = 'R' + ( i + 1 )
+    line[1] = entry.text
+    line[2] = start_time.toFixed(3) // start
+    let time = Math.round( entry.time ) / 1000
+    end_time = start_time + time
+    line[3] = end_time.toFixed(3) // end
+    line[4] = time.toFixed(3) // length
+    line[5] = rgb2hex(entry.color).toUpperCase() // length
+    csv.push(line.join('\t'))
+    start_time = end_time
+  })
+  return csv.join('\n')
+}
+
+function DialogsToReaperCSV( dialogs ) {
+  let csv = []
   csv[0] = ['#,Name,Start,End,Length,Color'] // Header
   let start_time = 0
   dialogs.forEach(function(entry, i){
     line = []
     line[0] = 'R' + ( i + 1 )
-    line[1] = '"' + entry.text.replace('"','""') + '"'
+    line[1] = '"' + entry.text.replace(/"/g, '""') + '"'
     line[2] = start_time.toFixed(3) // start
     let time = Math.round( entry.time ) / 1000
     end_time = start_time + time
