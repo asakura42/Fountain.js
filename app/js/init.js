@@ -316,13 +316,11 @@ function PrintFountainText( text ) {
       $('#filter, #unit').change(function(){
         chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
         chartSeq = DrawChartSequence(FilterDialogs(dialogs))
-        $('#stats-sequences').after('<button class="export-csv" id="export-csv">CSV Export</button>')
-        $('#stats-sequences').after('<button class="export-csv" id="export-csv-reaper">REAPER CSV Export</button>')
         DrawCategoriesChart(dialogs)
       })
 
       $('.export-csv').on('click', function () {
-        dialogs = AnalyseDialogs()
+        dialogs = FilterDialogs(AnalyseDialogs())
         var csv = ''
         if( $(this).attr('id') === 'export-csv' ) {
           csv = DialogsToCSV(dialogs)
