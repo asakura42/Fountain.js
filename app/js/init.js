@@ -266,6 +266,10 @@ function PrintFountainText( text ) {
           </div>
           <div id="stats-characters" class="charts"></div>
           <div id="stats-sequences" class="charts"></div>
+          <div>
+            <button class="export-csv" id="export-csv">CSV Export</button>
+            <button class="export-csv" id="export-csv-reaper">REAPER CSV Export</button>
+          </div>
           <div id="stats-categories" class="charts"></div>`, 'stats-page', 'page-stats')
         )
     $('#characters_per_minutes').val(cookie.char_per_minutes)
@@ -308,9 +312,6 @@ function PrintFountainText( text ) {
       var chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
       var chartSeq = DrawChartSequence(FilterDialogs(dialogs))
 
-      $('#stats-sequences').after('<button class="export-csv" id="export-csv">CSV Export</button>')
-      $('#stats-sequences').after('<button class="export-csv" id="export-csv-reaper">REAPER CSV Export</button>')
-
       DrawCategoriesChart(dialogs)
 
       $('#filter, #unit').change(function(){
@@ -342,7 +343,8 @@ function PrintFountainText( text ) {
 
       $('.dialogue p').on('click', function () {
         $(this).toggleClass('clicked')
-        copyToClipboard( $(this).text() )
+        if( $(this).hasClass('clicked') )
+          copyToClipboard( $(this).text() )
       });
 
 
