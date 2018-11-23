@@ -342,9 +342,9 @@ function PrintFountainText( text ) {
       scrollTo( $( anchor ) )
 
       $('.dialogue p').on('click', function () {
-        $(this).toggleClass('clicked')
-        if( $(this).hasClass('clicked') )
-          copyToClipboard( $(this).text() )
+        $('.clicked').removeClass('clicked')
+        $(this).addClass('clicked')
+        copyToClipboard( $(this).text() )
       });
 
 
