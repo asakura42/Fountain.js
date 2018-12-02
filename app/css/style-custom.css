@@ -214,6 +214,6 @@ svg {
 	visibility: visible;
 }
 
-#fountain-js #workspace #script .dialogue .clicked {
+#fountain-js #workspace #script .clicked p {
 	font-weight:bold;
 }

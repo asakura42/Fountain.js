@@ -341,12 +341,31 @@ function PrintFountainText( text ) {
       let anchor = '#' + document.URL.split('#')[1]
       scrollTo( $( anchor ) )
 
-      $('.dialogue p').on('click', function () {
+      $('.dialogue').on('click', function () {
         $('.clicked').removeClass('clicked')
         $(this).addClass('clicked')
-        copyToClipboard( $(this).text() )
+        copyToClipboard( $(this).find('p').text() )
       });
 
+      // Arrow key navigation to go to next clicked dialogue of same character
+      $(document).keypress(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which)
+        let clicked_elm = $('.clicked')
+        if ( clicked_elm.length == 0 ) return // If no .clicked element
+        let character_class = clicked_elm.attr('class').split(' ')[1]
+        var target_elm = []
+        if(keycode == '37'){ // ArrowLeft
+          target_elm = clicked_elm.prevAll('.' + character_class).first()
+        }
+        if(keycode == '39'){ // ArrowRight
+          target_elm = clicked_elm.nextAll('.' + character_class).first()
+        }
+        if ( target_elm.length > 0  ) {
+          clicked_elm.removeClass('clicked')
+          target_elm.addClass('clicked')
+          scrollTo( target_elm )
+        }
+      });
 
     }
   })
