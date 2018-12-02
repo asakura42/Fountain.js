@@ -364,6 +364,7 @@ function PrintFountainText( text ) {
           clicked_elm.removeClass('clicked')
           target_elm.addClass('clicked')
           scrollTo( target_elm )
+          copyToClipboard( target_elm.find('p').text() )
         }
       });
 

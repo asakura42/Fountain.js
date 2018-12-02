@@ -23,6 +23,7 @@ The result is an intensive mod of the [Fountain.js](http://mattdaly.github.io/Fo
 - Table of Contents Page with smooth scrolling links
 - Automatic sequences numbering
 - Support anchor in URL
+- Navigation with Left and Right arrows key between clicked character dialog lines
 
 ### Initialization
 
@@ -51,6 +52,7 @@ The result is an intensive mod of the [Fountain.js](http://mattdaly.github.io/Fo
 - No favicon
 - Colored italic text background
 - SVG icons for toolbar, directly emebed as HTML from JavaScript (less server request, more customization possible)
+- Highlight clicked dialog line
 
 ### Fixes
 
