@@ -57,6 +57,27 @@ $(document).ready(function(){
   }
 })
 
+// Arrow key navigation to go to next clicked dialogue of same character
+$(document).keypress(function(event){
+  var keycode = (event.keyCode ? event.keyCode : event.which)
+  let clicked_elm = $('.clicked')
+  if ( clicked_elm.length == 0 ) return // If no .clicked element
+  let character_class = clicked_elm.attr('class').split(' ')[1]
+  var target_elm = []
+  if(keycode == '37'){ // ArrowLeft
+    target_elm = clicked_elm.prevAll('.' + character_class).first()
+  }
+  if(keycode == '39'){ // ArrowRight
+    target_elm = clicked_elm.nextAll('.' + character_class).first()
+  }
+  if ( target_elm.length > 0  ) {
+    clicked_elm.removeClass('clicked')
+    target_elm.addClass('clicked')
+    scrollTo( target_elm )
+    copyToClipboard( target_elm.find('p').text() )
+  }
+});
+
 function ParseCharacters() {
   fetch('json/characters.json')
     .then(response => response.text())
@@ -345,27 +366,6 @@ function PrintFountainText( text ) {
         $('.clicked').removeClass('clicked')
         $(this).addClass('clicked')
         copyToClipboard( $(this).find('p').text() )
-      });
-
-      // Arrow key navigation to go to next clicked dialogue of same character
-      $(document).keypress(function(event){
-        var keycode = (event.keyCode ? event.keyCode : event.which)
-        let clicked_elm = $('.clicked')
-        if ( clicked_elm.length == 0 ) return // If no .clicked element
-        let character_class = clicked_elm.attr('class').split(' ')[1]
-        var target_elm = []
-        if(keycode == '37'){ // ArrowLeft
-          target_elm = clicked_elm.prevAll('.' + character_class).first()
-        }
-        if(keycode == '39'){ // ArrowRight
-          target_elm = clicked_elm.nextAll('.' + character_class).first()
-        }
-        if ( target_elm.length > 0  ) {
-          clicked_elm.removeClass('clicked')
-          target_elm.addClass('clicked')
-          scrollTo( target_elm )
-          copyToClipboard( target_elm.find('p').text() )
-        }
       });
 
     }
