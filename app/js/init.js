@@ -357,10 +357,9 @@ function PrintFountainText( text ) {
         if( cookie.script_visible === 'false'){
           $('.title-page, .toc-page, .script-page').hide()
         };
+        let anchor = '#' + document.URL.split('#')[1]
+        scrollTo( $( anchor ) )
       }
-
-      let anchor = '#' + document.URL.split('#')[1]
-      scrollTo( $( anchor ) )
 
       $('.dialogue').on('click', function () {
         $('.clicked').removeClass('clicked')
