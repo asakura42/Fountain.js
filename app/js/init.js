@@ -71,10 +71,8 @@ $(document).keypress(function(event){
     target_elm = clicked_elm.nextAll('.' + character_class).first()
   }
   if ( target_elm.length > 0  ) {
-    clicked_elm.removeClass('clicked')
-    target_elm.addClass('clicked')
     scrollTo( target_elm )
-    copyToClipboard( target_elm.find('p').text() )
+    ClickSelect( target_elm )
   }
 });
 
@@ -242,7 +240,7 @@ function PrintFountainText( text ) {
 
       // toc
       if ( ! $('.toc-page').length )
-        $script.append(page('<h2>Table des Matières</h2><h3>Sequences</h3><ol id="toc"></ol><h3>Stats</h3><ol><li><a href="#page-stats">Characters</a><li><a href="#stats-sequences">X-Range</a></li></ol>', 'toc-page'))
+        $script.append(page('<h2>Table of Content</h2><h3>Sequences</h3><ol id="toc"></ol><h3>Characters</h3><ol id="toc-characters"></ol><h3>Stats</h3><ol><li><a href="#page-stats">Characters</a><li><a href="#stats-sequences">X-Range</a></li></ol>', 'toc-page'))
 
       // script
       if ( ! $('.script-page').length ) {
@@ -260,7 +258,6 @@ function PrintFountainText( text ) {
         tocHTML = tocHTML + '<li><a href="#sequence-' + ( i + 1 ) + '">' + this.innerText + '</a></li>'
       })
       $('#toc').html( tocHTML )
-      $('html').smoothScroll() // Activate smooth scrool on all internal links
 
       if ( ! $('.stats-page').length )
         $script.append(page(`
@@ -316,11 +313,12 @@ function PrintFountainText( text ) {
       filterElm.val(sequence_init_val)
       if ( filterElm.val() === null ) filterElm.val( 0 )
 
-      $('.dialogue').each(function(){
+      $('.dialogue').each(function(i){
         let character = $(this).children('h4').text().replace(' (SUITE)', '' ).toLowerCase()
         let color = characters.characters && characters.characters[character] !== undefined && characters.characters[character].color !== undefined ? characters.characters[character].color : "#7d7d7d"
         $(this).children('h4').css('color', color)
-        $(this).addClass(character) // Add character name as class of character dialog titles
+        $(this).addClass(character.replace( ' ', '-' )) // Add character name as class of character dialog titles
+        $(this).attr('id', 'dialog-line-' + i + 1) // 1 based
       })
 
       $('.dialogue').each(function(){
@@ -330,6 +328,29 @@ function PrintFountainText( text ) {
 
       var dialogs = AnalyseDialogs()
 
+      // Table of Contents Characters
+      var names = [ ...new Set( dialogs.map(dialog => dialog.character) ) ]
+      let tocCharactersHTML = ''
+      names.forEach(function (name) {
+        character = name.toLowerCase()
+        let color = characters.characters && characters.characters[character] !== undefined && characters.characters[character].color !== undefined ? characters.characters[character].color : '#7d7d7d'
+        if ( color !== '' ) color = ' style="color: ' + color + ';"'
+        character = character.replace(' ', '-')
+        tocCharactersHTML = tocCharactersHTML + '<li class="' + character + '"><a href="#' + $('.' + character).first().attr('id') + '"'  + color + '>' + name + '</a></li>'
+      })
+      $('#toc-characters').html( tocCharactersHTML )
+      $('#toc-characters li a').on('click', function () {
+        let elm = $( $( this ).attr( 'href' ) )
+        ClickSelect( elm )
+      })
+
+      // Smooth Scroll and Top Offset on all links
+      $('a').on('click', function () {
+        var anchor = $(this).attr("href")
+        scrollTo( $( anchor ) )
+      })
+
+      // Charts
       var chart = DrawChart(SumDialogs(FilterDialogs(dialogs)))
       var chartSeq = DrawChartSequence(FilterDialogs(dialogs))
 
@@ -362,9 +383,7 @@ function PrintFountainText( text ) {
       }
 
       $('.dialogue').on('click', function () {
-        $('.clicked').removeClass('clicked')
-        $(this).addClass('clicked')
-        copyToClipboard( $(this).find('p').text() )
+        ClickSelect( this )
       });
 
     }
@@ -818,4 +837,11 @@ function downloadCSV( csv ) {
   document.body.appendChild(downloadLink)
   downloadLink.click()
   document.body.removeChild(downloadLink)
+}
+
+function ClickSelect( elm ) {
+  $('.clicked').removeClass('clicked')
+  elm = $(elm)
+  elm.addClass('clicked')
+  copyToClipboard( elm.find('p').text() )
 }

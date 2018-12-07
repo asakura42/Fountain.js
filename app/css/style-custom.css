@@ -217,3 +217,11 @@ svg {
 #fountain-js #workspace #script .clicked p {
 	font-weight:bold;
 }
+
+.script-page > p { /* Description */
+  font-style: italic;
+}
+
+.dialogue + p { /* Paragraph after dialogue */
+	margin-top: 2em;
+}

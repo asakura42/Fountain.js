@@ -98,7 +98,6 @@ Samples included:
 ## Dependencies
 
 - [jquery](https://code.jquery.com/)
-- [smoothscroll.js](http://mths.be/smoothscroll)
 - [normalize.css](https://necolas.github.io/normalize.css/)
 - [fountain.js](https://github.com/mattdaly/Fountain.js)
 - fountain.js [style.css](https://github.com/mattdaly/Fountain.js)
