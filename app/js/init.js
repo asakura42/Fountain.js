@@ -696,6 +696,15 @@ var DrawChartSequence = function( dialogs ) {
         cursor: 'pointer'
       },
       series: {
+        point: {
+          events: {
+            click: function () {
+              let target_elm = $('.dialogue').eq(this.index)
+              scrollTo( target_elm )
+              ClickSelect( target_elm )
+            }
+          }
+        },
         animation: {
           duration: false
         }
@@ -844,4 +853,5 @@ function ClickSelect( elm ) {
   elm = $(elm)
   elm.addClass('clicked')
   copyToClipboard( elm.find('p').text() )
+  history.pushState(null,null,'#' + elm.attr('id'))
 }
