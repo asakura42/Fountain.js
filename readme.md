@@ -4,7 +4,7 @@ This webapp aims to provide advanced statistics for your Screenplay written in f
 
 # Links
 
-- [Online WebApp](https://x-raym.github.io/Fountain.js/), for testing the app online.
+- [Online WebApp](https://x-raym.github.io/Fountain.js/app), for testing the app online.
 - [Zip Download](https://github.com/X-Raym/Fountain.js/archive/master.zip), for local usage with all the fancy features.
 - [GitHub Repo](https://github.com/X-Raym/Fountain.js), for contributing.
 - [Demos](https://x-raym.github.io/Fountain.js/samples/), for displaying some already prepared screenplays directly.
