@@ -7,7 +7,7 @@ This webapp aims to provide advanced statistics for your Screenplay written in f
 - [Online WebApp](https://x-raym.github.io/Fountain.js/app), for testing the app online.
 - [Zip Download](https://github.com/X-Raym/Fountain.js/archive/master.zip), for local usage with all the fancy features.
 - [GitHub Repo](https://github.com/X-Raym/Fountain.js), for contributing.
-- [Demos](https://x-raym.github.io/Fountain.js/samples/), for displaying some already prepared screenplays directly.
+- [Demos](https://github.com/X-Raym/Fountain.js/samples/), for displaying some already prepared screenplays directly.
 - Presentation on the article [ExtremRaym / Screenwritng in Fountain Format: Interoperability, Render and Analysis](https://www.extremraym.com/en/fountain-screenwriting-render-and-analysis/)
 
 # Introduction
