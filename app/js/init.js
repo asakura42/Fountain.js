@@ -61,9 +61,9 @@ $(document).ready(function(){
 $(document).keypress(function(event){
   var keycode = (event.keyCode ? event.keyCode : event.which)
   let clicked_elm = $('.clicked')
-  if ( clicked_elm.length == 0 ) return // If no .clicked element
+  if ( clicked_elm.length == 0 ) { return }// If no .clicked element
   let character_class = clicked_elm.attr('class').split(' ')[1]
-  var target_elm = []
+  var target_elm = {}
   if(keycode == '37'){ // ArrowLeft
     target_elm = clicked_elm.prevAll('.' + character_class).first()
   }
@@ -73,6 +73,9 @@ $(document).keypress(function(event){
   if ( target_elm.length > 0  ) {
     scrollTo( target_elm )
     ClickSelect( target_elm )
+  } else {
+    scrollTo( clicked_elm )
+    ClickSelect( clicked_elm )
   }
 });
 
@@ -318,7 +321,7 @@ function PrintFountainText( text ) {
         let color = characters.characters && characters.characters[character] !== undefined && characters.characters[character].color !== undefined ? characters.characters[character].color : "#7d7d7d"
         $(this).children('h4').css('color', color)
         $(this).addClass(character.replace( ' ', '-' )) // Add character name as class of character dialog titles
-        $(this).attr('id', 'dialog-line-' + i + 1) // 1 based
+        $(this).attr('id', 'dialog-line-' + ( i + 1 ) ) // 1 based
       })
 
       $('.dialogue').each(function(){
