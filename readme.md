@@ -24,6 +24,7 @@ The result is an intensive mod of the [Fountain.js](http://mattdaly.github.io/Fo
 - Automatic sequences numbering
 - Support anchor in URL
 - Navigation with Left and Right arrows key between clicked character dialog lines
+- Navigation with Up and Down arrows to go to dialog line next to the last clicked one
 
 ### Initialization
 

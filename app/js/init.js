@@ -66,9 +66,14 @@ $(document).keypress(function(event){
   var target_elm = {}
   if(keycode == '37'){ // ArrowLeft
     target_elm = clicked_elm.prevAll('.' + character_class).first()
-  }
-  if(keycode == '39'){ // ArrowRight
+  } else if (keycode == '39'){ // ArrowRight
     target_elm = clicked_elm.nextAll('.' + character_class).first()
+  } else if(keycode == '38'){ // Up
+    target_elm = clicked_elm.prevAll('.dialogue').first()
+  } else if(keycode == '40'){ // Down
+   target_elm = clicked_elm.nextAll('.dialogue').first()
+  } else {
+    return
   }
   if ( target_elm.length > 0  ) {
     scrollTo( target_elm )
