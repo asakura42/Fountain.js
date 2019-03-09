@@ -58,7 +58,7 @@ $(document).ready(function(){
 })
 
 // Arrow key navigation to go to next clicked dialogue of same character
-$(document).keypress(function(event){
+$(document).keydown(function(event){
   var keycode = (event.keyCode ? event.keyCode : event.which)
   let clicked_elm = $('.clicked')
   if ( clicked_elm.length == 0 ) { return }// If no .clicked element
