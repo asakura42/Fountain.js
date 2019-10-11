@@ -294,7 +294,7 @@ function PrintFountainText( text ) {
           <div id="stats-sequences" class="charts"></div>
           <div>
             <button class="export-csv" id="export-csv">CSV Export</button>
-            <button class="export-csv" id="export-csv-reaper">REAPER CSV Export</button>
+            <!--<button class="export-csv" id="export-csv-reaper">REAPER CSV Export</button>-->
           </div>
           <div id="stats-categories" class="charts"></div>`, 'stats-page', 'page-stats')
         )
@@ -375,9 +375,9 @@ function PrintFountainText( text ) {
         var csv = ''
         if( $(this).attr('id') === 'export-csv' ) {
           csv = DialogsToCSV(dialogs)
-        } else {
+        } /*else {
           csv = DialogsToReaperCSV(dialogs)
-        }
+        }*/
         downloadCSV( csv )
       })
 
