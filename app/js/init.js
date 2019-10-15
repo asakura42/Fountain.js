@@ -95,7 +95,7 @@ function ParseCharacters() {
       ParserAndPrint()
       refresh = setInterval(ParserAndPrint, 1000)
     }).catch(function(error){
-    // console.log("No characters.json detected", error)
+    console.log("Errors with characters.json", error)
   })
 }
 
