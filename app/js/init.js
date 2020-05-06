@@ -86,17 +86,20 @@ $(document).keydown(function(event){
 
 function ParseCharacters() {
   fetch('json/characters.json')
-    .then(response => response.text())
+    .then(response => response.ok ? response.text() : false)
     .then(function(text) {
      if( text ) {
+        console.log(text)
         characters = JSON.parse(text)
+      } else {
+        throw new Error("characters.json wasn't retrieved")
       }
-  }).then(function(){
+    }).catch(function(error){
+        console.log("Errors with characters.json", error)
+    }).then(function(){
       ParserAndPrint()
       refresh = setInterval(ParserAndPrint, 1000)
-    }).catch(function(error){
-    console.log("Errors with characters.json", error)
-  })
+    })
 }
 
 function AddToolbarButtons() {
