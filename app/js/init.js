@@ -89,7 +89,6 @@ function ParseCharacters() {
     .then(response => response.ok ? response.text() : false)
     .then(function(text) {
      if( text ) {
-        console.log(text)
         characters = JSON.parse(text)
       } else {
         throw new Error("characters.json wasn't retrieved")
