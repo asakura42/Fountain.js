@@ -177,6 +177,7 @@ var ParserAndPrint = function () {
   .then(text =>
     PrintFountainText( text )
   ).catch(function(error) {
+    console.log( error )
     RenderDragAndDrop()
   });
 };
@@ -345,7 +346,7 @@ function PrintFountainText( text ) {
         character = name.toLowerCase()
         let color = characters.characters && characters.characters[character] !== undefined && characters.characters[character].color !== undefined ? characters.characters[character].color : '#7d7d7d'
         if ( color !== '' ) color = ' style="color: ' + color + ';"'
-        character = character.replace(' ', '-')
+        character = makeSafeForCSS(character).replace(' ', '-')
         tocCharactersHTML = tocCharactersHTML + '<li class="' + character + '"><a href="#' + $('.' + character).first().attr('id') + '"'  + color + '>' + name + '</a></li>'
       })
       $('#toc-characters').html( tocCharactersHTML )
@@ -864,4 +865,13 @@ function ClickSelect( elm ) {
   elm.addClass('clicked')
   copyToClipboard( elm.find('p').text() )
   history.pushState(null,null,'#' + elm.attr('id'))
+}
+
+function makeSafeForCSS(name) {
+  return name.replace(/[^a-z0-9]/g, function(s) {
+      var c = s.charCodeAt(0);
+      if (c == 32) return '-';
+      if (c >= 65 && c <= 90) return '_' + s.toLowerCase();
+      return '__' + ('000' + c.toString(16)).slice(-4);
+  });
 }
