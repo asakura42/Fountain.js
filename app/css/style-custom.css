@@ -225,3 +225,7 @@ svg {
 .dialogue + p { /* Paragraph after dialogue */
 	margin-top: 2em;
 }
+
+#file-api:hover {
+	cursor: pointer;
+}
