@@ -69,6 +69,7 @@ function LoadFileFromClick() {
     reader.readAsText(file);
     reader.onload = readerEvent => {
       $('#file-api').hide()
+      $('#script').empty()
       PrintFountainText(readerEvent.target.result)
     }
   }
@@ -281,11 +282,11 @@ function PrintFountainText( text ) {
         $script.append(page('<h2>Table of Content</h2><h3>Sequences</h3><ol id="toc"></ol><h3>Characters</h3><ol id="toc-characters"></ol><h3>Stats</h3><ol><li><a href="#page-stats">Characters</a><li><a href="#stats-sequences">X-Range</a></li></ol>', 'toc-page'))
 
       // script
-      if ( ! $('.script-page').length ) {
-        $script.append(page(result.html.script, 'script-page'))
-      } else {
-        $('.script-page').html(result.html.script)
+      if ( ! $('#script-pages').length ) {
+        $script.append( '<div id="script-pages"></div>')
       }
+      let str = page(result.html.script)
+      $('#script-pages')[0].outerHTML = str[0].outerHTML.replaceAll('<hr>', '</div><div class="page script-page">')
 
       // Table of Content
       let sequencesTitles = $('.script-page h3')
@@ -302,23 +303,23 @@ function PrintFountainText( text ) {
           <h2>Statistiques</h2>
           <div id="stats-filter">
             <div class="filter-field filter-sequences">
-             <label for="filter">Sequence: </label>
-             <select id="filter">
+              <label for="filter">Sequence: </label>
+              <select id="filter">
                 <option value="0" selected>All</option>
-             </select>
+              </select>
             </div>
             <div class="filter-field filter-unit">
-             <label for="unit">Unit: </label>
-             <select id="unit">
+              <label for="unit">Unit: </label>
+              <select id="unit">
                 <option value="lines">Lines</option>
                 <option value="words">Words</option>
                 <option value="time" selected>Time</option>
-             </select>
-             </div>
-       <div class="filter-field filter-characters-er-minutes">
-               <label for="unit">Characters per Minutes: </label>
-               <input type="number" min="1" max="9999" id="characters_per_minutes" value="1300" maxlength="4" size="1">
-             </div>
+              </select>
+            </div>
+            <div class="filter-field filter-characters-er-minutes">
+              <label for="unit">Characters per Minutes: </label>
+              <input type="number" min="1" max="9999" id="characters_per_minutes" value="1300" maxlength="4" size="1">
+            </div>
           </div>
           <div id="stats-characters" class="charts"></div>
           <div id="stats-sequences" class="charts"></div>
